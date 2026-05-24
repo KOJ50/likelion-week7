@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Gmarket Sans";
+  src: url("./assets/fonts/GmarketSansTTFLight.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gmarket Sans";
+  src: url("./assets/fonts/GmarketSansTTFMedium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gmarket Sans";
+  src: url("./assets/fonts/GmarketSansTTFBold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@theme {
+  /* =========================
+    Color Tokens
+    ========================= */
+  /* Gray */
+  --color-gray-0: #ffffff;
+  --color-gray-1: #f7f7f7;
+  --color-gray-2: #cac8c8;
+  --color-gray-3: #858585;
+  --color-gray-4: #363636;
+  --color-gray-5: #000000;
+
+  /* Red */
+  --color-red-primary: #f0485f;
+  --color-red-secondary: #f9a0ad;
+  --color-red-assistive: #ffdfe3;
+
+  /* Yellow */
+  --color-yellow-primary: #fdf7c3;
+  --color-yellow-secondary: #e8d870;
+
+  /* =========================
+    Typography
+    ========================= */
+  --font-sans:
+    "Gmarket Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+
+  /* Header */
+  --text-header: 36px;
+  --text-header--line-height: normal;
+  --text-header--font-weight: 700;
+
+  /* SubTitle */
+  --text-subtitle: 24px;
+  --text-subtitle--line-height: normal;
+  --text-subtitle--font-weight: 500;
+
+  /* body-bold */
+  --text-body-bold: 20px;
+  --text-body-bold--line-height: normal;
+  --text-body-bold--font-weight: 700;
+
+  /* body */
+  --text-body: 20px;
+  --text-body--line-height: normal;
+  --text-body--font-weight: 500;
+
+  /* caption */
+  --text-caption: 12px;
+  --text-caption--line-height: normal;
+  --text-caption--font-weight: 500;
+
+  /* =========================
+    Radius Tokens
+    ========================= */
+  --radius-modal: 20px;
+  --radius-small: 5px;
+  --radius-button: 16px;
+}
+
+@layer base {
+  body {
+    font-family: "Gmarket Sans", sans-serif;
+  }
+}
