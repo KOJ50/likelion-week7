@@ -25,6 +25,10 @@
   /* =========================
     Color Tokens
     ========================= */
+  /* Breakpoints */
+  --breakpoint-ph: 402px;
+  --breakpoint-dt: 1725px;
+
   /* Gray */
   --color-gray-0: #ffffff;
   --color-gray-1: #f7f7f7;
