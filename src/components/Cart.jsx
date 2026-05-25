@@ -3,7 +3,7 @@ import IconCart from "../assets/icons/icon_cart.svg?react";
 const Cart = ({ count }) => {
   return (
     <div className="relative">
-      <button className="w-[31.5px] h-[31.5px] p-[6px] relative flex items-center justify-center cursor-pointer">
+      <button className="w-[31.5px] h-[31.5px] p-[6px] relative flex items-center justify-center rounded-[var(--radius-small)] cursor-pointer hover:bg-white/30">
         <IconCart />
       </button>
       {count > 0 && (
