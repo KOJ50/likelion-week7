@@ -25,6 +25,11 @@
   /* =========================
     Color Tokens
     ========================= */
+
+  /* Breakpoints */
+  --breakpoint-ph: 402px;
+  --breakpoint-dt: 1725px;
+
   /* Gray */
   --color-gray-0: #ffffff;
   --color-gray-1: #f7f7f7;
@@ -45,9 +50,8 @@
   /* =========================
     Typography
     ========================= */
-  --font-sans:
-    "Gmarket Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  --font-sans: "Gmarket Sans", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   /* Header */
   --text-header: 36px;
