@@ -1,5 +1,6 @@
 import CartList from "./components/CartList";
 import Cart from "./components/Cart";
+import OptionTag from "./components/OptionTag";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         secondPrice="5,000"
       />
       <Cart count={1} />
+      <OptionTag text={"전체"} isSelected={true}/>
     </div>
   );
 }
