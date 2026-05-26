@@ -38,7 +38,7 @@ function LoginPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center">
+    <main className="flex min-h-screen items-center justify-end px-[27px] pt-[87px] pb-[66px] ph:justify-center ph:px-0 ph:pt-0 ph:pb-0">
       <form
         className="flex w-full max-w-[625px] flex-col items-center gap-13 rounded-modal bg-gray-0 px-5 pt-20 pb-24 shadow-[0_0_10px_rgba(0,0,0,0.08)]"
         onSubmit={handleSubmit}
