@@ -16,8 +16,11 @@ const NavBar = () => {
       {/* 오른쪽 메뉴 영역 */}
       <div className="flex items-center gap-2 min-[403px]:gap-6 text-white min-w-max">
         <Cart count={1} />
-        <button className="text-xs min-[403px]:text-sm hover:bg-white/30 rounded-sm cursor-pointer px-2 min-[403px]:px-3 py-1.5 whitespace-nowrap">
-          로그아웃
+        <button
+          onClick={() => navigate("/login")}
+          className="text-xs min-[403px]:text-sm hover:bg-white/30 rounded-sm cursor-pointer px-2 min-[403px]:px-3 py-1.5 whitespace-nowrap"
+        >
+          로그인
         </button>
       </div>
     </header>
