@@ -14,38 +14,26 @@ function formatWon(amount) {
   return `${numericAmount.toLocaleString("ko-KR")}원`;
 }
 //수량 버튼 디자인
-function QuantityButton({ icon, label, onClick }) {
+function QuantityButton({ icon, onClick }) {
   return (
     <button
       type="button"
-      className="flex size-8 items-center justify-center rounded-small bg-gray-1"
-      aria-label={label}
+      className="flex size-8 cursor-pointer items-center justify-center rounded-small bg-gray-1"
       onClick={onClick}
     >
-      <img className="size-8" src={icon} alt="" aria-hidden="true" />
+      <img className="size-8" src={icon} alt="" />
     </button>
   );
 }
 
-function QuantityControl({ itemName, quantity, onDecrease, onIncrease }) {
+function QuantityControl({ quantity, onDecrease, onIncrease }) {
   return (
-    <div
-      className="inline-flex items-center gap-8 px-2 py-3"
-      aria-label={`${itemName} 수량`}
-    >
-      <QuantityButton
-        icon={minusIcon}
-        label={`${itemName} 수량 줄이기`}
-        onClick={onDecrease}
-      />
+    <div className="inline-flex items-center gap-8 px-2 py-3">
+      <QuantityButton icon={minusIcon} onClick={onDecrease} />
 
       <span className="text-center text-body">{quantity}</span>
 
-      <QuantityButton
-        icon={plusIcon}
-        label={`${itemName} 수량 늘리기`}
-        onClick={onIncrease}
-      />
+      <QuantityButton icon={plusIcon} onClick={onIncrease} />
     </div>
   );
 }
@@ -82,29 +70,23 @@ function ModalMenu({
   return (
     <section
       className={`flex w-full flex-col items-start bg-gray-0 px-14 py-12 ph:h-[667px] ph:w-[738px] ph:gap-10 ph:rounded-modal ${className}`}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="menu-modal-title"
     >
       <div className="flex w-full items-start justify-between gap-6">
         <div>
-          <h1 id="menu-modal-title" className="text-header">
-            {menu.name}
-          </h1>
+          <h1 className="text-header">{menu.name}</h1>
 
           <div className="mt-3 flex items-center gap-1 text-body text-gray-3">
-            <span className="text-[#ffc107]">★</span>
+            <span>⭐</span>
             <span>{menu.rating}</span>
           </div>
         </div>
 
         <button
           type="button"
-          className="flex size-8 shrink-0 items-center justify-center rounded-small bg-gray-1 p-2"
-          aria-label="메뉴 모달 닫기"
+          className="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-small bg-gray-1 p-2"
           onClick={onClose}
         >
-          <img className="h-4 w-4" src={closeIcon} alt="" aria-hidden="true" />
+          <img className="h-4 w-4" src={closeIcon} alt="" />
         </button>
       </div>
 
@@ -124,13 +106,14 @@ function ModalMenu({
                   <h2 className="text-body">{item.name}</h2>
                   <p className="text-caption text-gray-3">{item.description}</p>
                 </div>
-                <strong className="text-body-bold">{formatWon(item.price)}</strong>
+                <strong className="text-body-bold">
+                  {formatWon(item.price)}
+                </strong>
               </div>
 
               <div className="flex shrink-0">
                 {quantity > 0 ? (
                   <QuantityControl
-                    itemName={item.name}
                     quantity={quantity}
                     onDecrease={() => handleQuantityChange(item.id, -1)}
                     onIncrease={() => handleQuantityChange(item.id, 1)}
