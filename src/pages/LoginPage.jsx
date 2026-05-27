@@ -5,6 +5,8 @@ import Button from "../components/Button-common";
 import Input from "../components/Input";
 import { MOCK_USER } from "../data/mockUser";
 
+const AUTH_STORAGE_KEY = "authUser";
+
 function LoginPage() {
   const navigate = useNavigate();
   const [loginForm, setLoginForm] = useState({
@@ -30,6 +32,10 @@ function LoginPage() {
       loginForm.userId === MOCK_USER.id &&
       loginForm.password === MOCK_USER.pw
     ) {
+      sessionStorage.setItem(
+        AUTH_STORAGE_KEY,
+        JSON.stringify({ id: MOCK_USER.id }),
+      );
       navigate("/");
       return;
     }
