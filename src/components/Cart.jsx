@@ -7,7 +7,7 @@ const Cart = ({ count }) => {
         <IconCart />
       </button>
       {count > 0 && (
-        <div className="absolute top-[3px] left-[17px] rounded-full w-3 h-3 px-[4px] py-[1px] bg-yellow-primary flex items-center justify-center text-[8px]">
+        <div className="absolute top-[3px] left-[17px] rounded-full w-3 h-3 px-[4px] py-[1px] bg-yellow-primary flex items-center justify-center text-[8px] text-black">
           {count}
         </div>
       )}
