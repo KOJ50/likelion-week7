@@ -69,7 +69,7 @@ function ModalMenu({
 
   return (
     <section
-      className={`flex w-full flex-col items-start bg-gray-0 px-14 py-12 ph:h-[667px] ph:w-[738px] ph:gap-10 ph:rounded-modal ${className}`}
+      className={`flex w-full flex-col items-start bg-gray-0 px-14 py-12 h-full overflow-y-auto ph:h-[667px] ph:w-[738px] ph:gap-10 ph:rounded-modal ${className}`}
     >
       <div className="flex w-full items-start justify-between gap-6">
         <div>

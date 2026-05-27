@@ -48,7 +48,7 @@ function PaymentPage() {
             />
           </button>
           <h1 className="absolute left-1/2 -translate-x-1/2 text-white text-[36px] ph:text-2xl font-bold">
-            {showPay ? "결제하기" : "장바구니"}
+            장바구니
           </h1>
         </div>
 
@@ -67,7 +67,7 @@ function PaymentPage() {
 
       <div className="ph:hidden">
         {!showPay ? (
-          <main className="w-full flex flex-col px-5 mt-10 gap-6">
+          <main className="w-full flex flex-col items-center px-5 mt-10 gap-6">
             {cartItems.length > 0 ? (
               cartItems.map((item, index) => (
                 <CartList
@@ -90,16 +90,14 @@ function PaymentPage() {
           <main className="w-full px-5 mt-10">
             <ModalPay
               totalAmount={totalAmount}
-              onSubmit={({ paymentMethod, totalAmount }) => {
-                console.log(paymentMethod, totalAmount);
-              }}
+              onSubmit={() => navigate("/complete")}
             />
           </main>
         )}
       </div>
 
       {/* 데스크탑 */}
-      <main className="hidden ph:flex w-full max-w-[1200px] justify-between mt-[90px] px-5 mx-auto gap-6">
+      <main className="hidden ph:flex w-full max-w-[1200px] justify-between mt-[90px] px-5 mx-auto gap-6 ">
         <section className="flex flex-col gap-6">
           {cartItems.length > 0 ? (
             cartItems.map((item, index) => (
@@ -122,9 +120,7 @@ function PaymentPage() {
         <ModalPay
           totalAmount={totalAmount}
           className="w-[568px]"
-          onSubmit={({ paymentMethod, totalAmount }) => {
-            console.log(paymentMethod, totalAmount);
-          }}
+          onSubmit={() => navigate("/complete")}
         />
       </main>
     </div>
