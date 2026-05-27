@@ -2,9 +2,25 @@ import { useNavigate } from "react-router-dom";
 import Cart from "./Cart.jsx";
 import { useState } from "react";
 
+const AUTH_STORAGE_KEY = "authUser";
+
 const NavBar = ({ title }) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() =>
+    Boolean(sessionStorage.getItem(AUTH_STORAGE_KEY)),
+  );
+
+  const handleAuthClick = () => {
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
+
+    sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
 
   return (
     <>
@@ -20,10 +36,10 @@ const NavBar = ({ title }) => {
         <div className="hidden ph:flex items-center ph:gap-6 text-white min-w-max">
           <Cart count={1} onClick={() => navigate("/payment")} />
           <button
-            onClick={() => navigate("/login")}
+            onClick={handleAuthClick}
             className="text-xs ph:text-sm hover:bg-white/30 rounded-small cursor-pointer px-2 ph:px-3 py-1.5 whitespace-nowrap"
           >
-            로그인
+            {isLoggedIn ? "로그아웃" : "로그인"}
           </button>
         </div>
 
@@ -56,11 +72,11 @@ const NavBar = ({ title }) => {
             <button
               className="text-red-primary text-xl font-semibold"
               onClick={() => {
-                navigate("/login");
+                handleAuthClick();
                 setIsMenuOpen(false);
               }}
             >
-              로그아웃
+              {isLoggedIn ? "로그아웃" : "로그인"}
             </button>
           </div>
         </>
