@@ -2,7 +2,7 @@ import { useState } from "react";
 import FoodCard from "../components/FoodCard.jsx";
 import foodData from "../data/mockFoodCard.js";
 import OptionTag from "../components/OptionTag.jsx";
-import NavBar from "../components/Navbar.jsx";
+import NavBar from "../components/NavBar.jsx";
 import ModalMenu from "../components/ModalMenu.jsx";
 
 const categories = ["전체", "분식", "기타"];
@@ -13,7 +13,7 @@ function MainPage() {
 
   return (
     <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center">
-      <NavBar />
+      <NavBar title="어쩌구 저쩌구" />
       <main className="w-full max-w-[1200px] px-4 flex flex-col pt-[90px] pb-[100px]">
         <div className="flex gap-[24px] mb-6">
           {categories.map((cat) => (
@@ -31,7 +31,7 @@ function MainPage() {
                 key={food.id}
                 image={food.image}
                 name={food.name}
-                rate={food.rate}
+                rate={food.rating}
                 caption={food.caption}
               />
             </div>

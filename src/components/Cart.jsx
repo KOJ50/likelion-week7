@@ -1,9 +1,12 @@
 import IconCart from "../assets/icons/icon_cart.svg?react";
 
-const Cart = ({ count }) => {
+const Cart = ({ count, onClick }) => {
   return (
     <div className="relative">
-      <button className="w-[31.5px] h-[31.5px] p-[6px] relative flex items-center justify-center rounded-small cursor-pointer hover:bg-white/30">
+      <button
+        onClick={onClick}
+        className="w-[31.5px] h-[31.5px] p-[6px] relative flex items-center justify-center rounded-small cursor-pointer hover:bg-white/30"
+      >
         <IconCart />
       </button>
       {count > 0 && (
