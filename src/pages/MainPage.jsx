@@ -2,7 +2,7 @@ import { useState } from "react";
 import FoodCard from "../components/FoodCard.jsx";
 import foodData from "../data/mockFoodCard.js";
 import OptionTag from "../components/OptionTag.jsx";
-import NavBar from "../components/Navbar.jsx";
+import NavBar from "../components/NavBar.jsx";
 import ModalMenu from "../components/ModalMenu.jsx";
 
 const categories = ["전체", "분식", "기타"];
@@ -31,7 +31,7 @@ function MainPage() {
                 key={food.id}
                 image={food.image}
                 name={food.name}
-                rate={food.rate}
+                rate={food.rating}
                 caption={food.caption}
               />
             </div>
