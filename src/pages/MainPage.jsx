@@ -13,7 +13,7 @@ function MainPage() {
 
   return (
     <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center">
-      <NavBar />
+      <NavBar title="어쩌구 저쩌구" />
       <main className="w-full max-w-[1200px] px-4 flex flex-col pt-[90px] pb-[100px]">
         <div className="flex gap-[24px] mb-6">
           {categories.map((cat) => (

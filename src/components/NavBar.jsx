@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Cart from "./Cart.jsx";
 
-const NavBar = () => {
+const NavBar = ({ title }) => {
   const navigate = useNavigate();
 
   return (
@@ -10,7 +10,7 @@ const NavBar = () => {
         className="text-white text-lg min-[403px]:text-2xl font-bold cursor-pointer whitespace-nowrap"
         onClick={() => navigate("/")}
       >
-        어쩌구 저쩌구
+        {title}
       </h1>
 
       {/* 오른쪽 메뉴 영역 */}
