@@ -12,10 +12,10 @@ function MainPage() {
   const [selectedMenu, setSelectedMenu] = useState(null);
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center">
+    <div className="w-full min-h-screen bg-gray-1 flex flex-col items-center">
       <NavBar title="어쩌구 저쩌구" />
       <main className="w-full max-w-[1200px] px-4 flex flex-col pt-[90px] pb-[100px]">
-        <div className="flex gap-[24px] mb-6">
+        <div className="flex gap-[24px] mb-6 justify-center">
           {categories.map((cat) => (
             <div key={cat} onClick={() => setActiveCategory(cat)}>
               <OptionTag text={cat} isSelected={activeCategory === cat} />
@@ -24,7 +24,7 @@ function MainPage() {
         </div>
 
         {/* 음식 카드 리스트 */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-[72px]">
+        <div className="grid grid-cols-1 ph:grid-cols-4 gap-6 mt-[72px] justify-items-center">
           {foodData.map((food) => (
             <div key={food.id} onClick={() => setSelectedMenu(food)}>
               <FoodCard
@@ -40,7 +40,7 @@ function MainPage() {
       </main>
       {/* 모달 */}
       {selectedMenu && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="fixed top-[83px] bottom-0 left-0 right-0 bg-black/50 flex items-center justify-center z-50">
           <ModalMenu
             menu={selectedMenu}
             onClose={() => setSelectedMenu(null)}

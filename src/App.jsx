@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import PaymentPage from "./pages/PaymentPage";
 import PaymentCompletePage from "./pages/PaymentCompletePage";
+import CompletePage from "./pages/CompletePage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/payment-complete" element={<PaymentCompletePage />} />
+        <Route path="/complete" element={<CompletePage />} />
       </Routes>
     </BrowserRouter>
   );
