@@ -14,17 +14,21 @@ function MainPage() {
   return (
     <div className="w-full min-h-screen bg-gray-1 flex flex-col items-center">
       <NavBar title="어쩌구 저쩌구" />
-      <main className="w-full max-w-[1200px] px-4 flex flex-col pt-[90px] pb-[100px]">
-        <div className="flex gap-[24px] mb-6 justify-center">
+      <main className="w-full max-w-300 px-4 flex flex-col pt-22.5 pb-25">
+        <div className="flex gap-6 mb-6 justify-center">
           {categories.map((cat) => (
-            <div key={cat} onClick={() => setActiveCategory(cat)}>
-              <OptionTag text={cat} isSelected={activeCategory === cat} />
-            </div>
+            <OptionTag
+              key={cat}
+              text={cat}
+              isSelected={activeCategory === cat}
+              variant="main"
+              onClick={() => setActiveCategory(cat)}
+            />
           ))}
         </div>
 
         {/* 음식 카드 리스트 */}
-        <div className="grid grid-cols-1 ph:grid-cols-4 gap-6 mt-[72px] justify-items-center">
+        <div className="grid grid-cols-1 ph:grid-cols-4 gap-6 mt-18 justify-items-center">
           {foodData.map((food) => (
             <div key={food.id} onClick={() => setSelectedMenu(food)}>
               <FoodCard
