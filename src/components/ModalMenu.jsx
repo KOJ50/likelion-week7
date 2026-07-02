@@ -1,8 +1,7 @@
 import { useState } from "react";
 import closeIcon from "../assets/icons/icon_close.svg";
-import minusIcon from "../assets/icons/icon_minus.svg";
-import plusIcon from "../assets/icons/icon_plus.svg";
 import Button from "./Button-common";
+import Stepper from "./Stepper";
 
 function formatWon(amount) {
   const numericAmount = Number(amount);
@@ -13,31 +12,6 @@ function formatWon(amount) {
 
   return `${numericAmount.toLocaleString("ko-KR")}원`;
 }
-//수량 버튼 디자인
-function QuantityButton({ icon, onClick }) {
-  return (
-    <button
-      type="button"
-      className="flex size-8 cursor-pointer items-center justify-center rounded-small bg-gray-1"
-      onClick={onClick}
-    >
-      <img className="size-8" src={icon} alt="" />
-    </button>
-  );
-}
-
-function QuantityControl({ quantity, onDecrease, onIncrease }) {
-  return (
-    <div className="inline-flex items-center gap-8 px-2 py-3">
-      <QuantityButton icon={minusIcon} onClick={onDecrease} />
-
-      <span className="text-center text-body">{quantity}</span>
-
-      <QuantityButton icon={plusIcon} onClick={onIncrease} />
-    </div>
-  );
-}
-
 function ModalMenu({
   menu,
   isOpen = true,
@@ -113,7 +87,7 @@ function ModalMenu({
 
               <div className="flex shrink-0">
                 {quantity > 0 ? (
-                  <QuantityControl
+                  <Stepper
                     quantity={quantity}
                     onDecrease={() => handleQuantityChange(item.id, -1)}
                     onIncrease={() => handleQuantityChange(item.id, 1)}
