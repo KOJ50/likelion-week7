@@ -42,9 +42,10 @@
   --color-red-secondary: #f9a0ad;
   --color-red-assistive: #ffdfe3;
 
-  /* Yellow */
-  --color-yellow-primary: #fdf7c3;
-  --color-yellow-secondary: #e8d870;
+  /* Green */
+  --color-green-primary: #0b8d6f;
+  --color-green-secondary: #98d2b8;
+  --color-green-assistive: #dff1e9;
 
   /* =========================
     Typography
@@ -72,6 +73,16 @@
   --text-body: 20px;
   --text-body--line-height: normal;
   --text-body--font-weight: 500;
+
+  /* subbody-bold */
+  --text-subbody-bold: 16px;
+  --text-subbody-bold--line-height: normal;
+  --text-subbody-bold--font-weight: 700;
+
+  /* subbody */
+  --text-subbody: 16px;
+  --text-subbody--line-height: normal;
+  --text-subbody--font-weight: 500;
 
   /* caption */
   --text-caption: 12px;
