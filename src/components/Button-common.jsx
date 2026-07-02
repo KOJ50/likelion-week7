@@ -1,8 +1,7 @@
 const buttonStatusClass = {
   disabled: "bg-gray-1 text-gray-3 cursor-not-allowed",
   active:
-    "bg-yellow-primary text-gray-5 cursor-pointer hover:bg-yellow-secondary",
-  hover: "bg-yellow-secondary text-gray-5 cursor-pointer",
+    "bg-red-assisitive text-red-primary cursor-pointer hover:border-red-primary hover:border",
   noHoverBtn: "bg-red-primary text-gray-0 cursor-pointer",
 };
 
@@ -23,7 +22,7 @@ function Button({
   return (
     <button
       type="button"
-      className={`inline-flex h-13.5 items-center justify-center rounded-button px-16 py-4 text-body ${buttonStatusClass[currentStatus]} ${className}`}
+      className={`inline-flex h-13.5 items-center justify-center rounded-button px-16 py-4 text-body whitespace-nowrap ${buttonStatusClass[currentStatus]} ${className}`}
       disabled={currentStatus === "disabled"}
       {...props}
     >
