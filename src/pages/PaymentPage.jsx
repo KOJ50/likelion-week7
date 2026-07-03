@@ -91,6 +91,7 @@ function PaymentPage() {
             <ModalPay
               totalAmount={totalAmount}
               onSubmit={() => navigate("/complete")}
+              onRechargeCredit={() => navigate("/recharge")}
             />
           </main>
         )}
@@ -120,6 +121,7 @@ function PaymentPage() {
         <ModalPay
           totalAmount={totalAmount}
           onSubmit={() => navigate("/complete")}
+          onRechargeCredit={() => navigate("/recharge")}
         />
       </main>
     </div>

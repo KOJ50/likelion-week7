@@ -14,6 +14,7 @@ const formatDeductedCredit = (amount) =>
 function ModalPay({
   totalAmount = mockPayment.totalAmount,
   onSubmit,
+  onRechargeCredit,
   className = "",
 }) {
   const paymentTotalAmount = mockPayment.totalAmount ?? totalAmount;
@@ -65,7 +66,7 @@ function ModalPay({
             <span className="text-caption text-gray-3">
               크레딧이 부족한가요?
             </span>
-            <RechargeCredit />
+            <RechargeCredit onClick={onRechargeCredit} />
           </div>
         </div>
       </div>
