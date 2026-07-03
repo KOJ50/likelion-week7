@@ -1,28 +1,29 @@
-import { useState } from "react";
 import Button from "./Button-common";
+import RechargeCredit from "./RechargeCredit";
+import { MOCK_USER } from "../data/mockUser";
 
-const defaultPaymentMethods = [
-  "카카오페이",
-  "네이버페이",
-  "카드 결제",
-  "무통장 입금",
-];
+const mockPayment = {
+  totalAmount: 2000,
+};
+
+const formatWon = (amount) => `${amount.toLocaleString("ko-KR")}원`;
+const formatCredit = (amount) => `${amount.toLocaleString("ko-KR")}C`;
+const formatDeductedCredit = (amount) =>
+  amount === 0 ? formatCredit(amount) : `-${formatCredit(amount)}`;
 
 function ModalPay({
-  paymentMethods = defaultPaymentMethods,
-  totalAmount = 0,
+  totalAmount = mockPayment.totalAmount,
   onSubmit,
   className = "",
 }) {
-  const [selectedPaymentMethod] = useState(paymentMethods[0] ?? "");
-  const activePaymentMethod = paymentMethods.includes(selectedPaymentMethod)
-    ? selectedPaymentMethod
-    : paymentMethods[0];
+  const paymentTotalAmount = mockPayment.totalAmount ?? totalAmount;
+  const ownedCredit = MOCK_USER.credit;
+  const deductionCredit = paymentTotalAmount;
+  const remainingCredit = ownedCredit - deductionCredit;
 
   const handleSubmit = () => {
     onSubmit?.({
-      paymentMethod: activePaymentMethod,
-      totalAmount,
+      totalAmount: paymentTotalAmount,
     });
   };
 
@@ -33,14 +34,47 @@ function ModalPay({
       <h1 className="text-center text-header">결제하기</h1>
 
       <div className="flex flex-col gap-11">
-        <div>1-1</div>
+        <div className="inline-flex items-center justify-between text-body-bold">
+          <span>총 결제금액</span>
+          <span>{formatWon(paymentTotalAmount)}</span>
+        </div>
+
         <div className="flex flex-col gap-3.75">
-          <div>1-2-1</div>
-          <div>1-2-2</div>
+          <div className="flex w-118 flex-col items-end justify-center gap-3.75 rounded-small bg-gray-1 px-3 py-6">
+            <div className="flex w-full items-center justify-between text-body-bold">
+              <span>보유 크레딧</span>
+              <span className="text-right">{formatCredit(ownedCredit)}</span>
+            </div>
+
+            <div className="flex w-full items-center justify-between text-body">
+              <span>차감 예정 크레딧</span>
+              <span className="text-right">
+                {formatDeductedCredit(deductionCredit)}
+              </span>
+            </div>
+
+            <div className="flex w-full items-center justify-between text-green-primary text-subbody-bold">
+              <span>차감 후 잔액</span>
+              <span className="text-right">
+                {formatCredit(remainingCredit)}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex w-fit items-center gap-2.5 self-end">
+            <span className="text-caption text-gray-3">
+              크레딧이 부족한가요?
+            </span>
+            <RechargeCredit />
+          </div>
         </div>
       </div>
 
-      <Button status="noHoverBtn" className="self-center" onClick={handleSubmit}>
+      <Button
+        status="noHoverBtn"
+        className="self-center"
+        onClick={handleSubmit}
+      >
         결제하기
       </Button>
     </section>
