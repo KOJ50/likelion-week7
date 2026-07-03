@@ -30,24 +30,24 @@ function ModalPay({
 
   return (
     <section
-      className={`flex w-full flex-col border border-gray-2 bg-gray-0 px-12 py-14 text-gray-5 rounded-modal gap-15 ${className}`}
+      className={`flex w-[402px] max-w-full flex-col border border-gray-2 bg-gray-0 px-12 py-14 text-gray-5 rounded-modal gap-15 ph:w-full ${className}`}
     >
       <h1 className="text-center text-header">결제하기</h1>
 
-      <div className="flex flex-col gap-11">
+      <div className="flex w-63.25 flex-col gap-11 ph:w-118">
         <div className="inline-flex items-center justify-between text-body-bold">
           <span>총 결제금액</span>
           <span>{formatWon(paymentTotalAmount)}</span>
         </div>
 
         <div className="flex flex-col gap-3.75">
-          <div className="flex w-118 flex-col items-end justify-center gap-3.75 rounded-small bg-gray-1 px-3 py-6">
+          <div className="flex flex-col items-end justify-center gap-3.75 rounded-small bg-gray-1 px-3 py-6">
             <div className="flex w-full items-center justify-between text-body-bold">
               <span>보유 크레딧</span>
               <span className="text-right">{formatCredit(ownedCredit)}</span>
             </div>
 
-            <div className="flex w-full items-center justify-between text-body">
+            <div className="flex w-full items-center justify-between text-subbody">
               <span>차감 예정 크레딧</span>
               <span className="text-right">
                 {formatDeductedCredit(deductionCredit)}

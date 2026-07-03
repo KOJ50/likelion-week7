@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Button from "../components/Button-common.jsx";
 import CartList from "../components/CartList.jsx";
 import ModalPay from "../components/ModalPay.jsx";
 import pointerIcon from "../assets/icons/icon_pointer.png";
@@ -69,17 +70,26 @@ function PaymentPage() {
         {!showPay ? (
           <main className="w-full flex flex-col items-center px-5 mt-10 gap-6">
             {cartItems.length > 0 ? (
-              cartItems.map((item, index) => (
-                <CartList
-                  key={index}
-                  count={item.count}
-                  mainName={item.mainName}
-                  firstMenu={item.firstMenu}
-                  firstPrice={item.firstPrice}
-                  secondMenu={item.secondMenu}
-                  secondPrice={item.secondPrice}
-                />
-              ))
+              <>
+                {cartItems.map((item, index) => (
+                  <CartList
+                    key={index}
+                    count={item.count}
+                    mainName={item.mainName}
+                    firstMenu={item.firstMenu}
+                    firstPrice={item.firstPrice}
+                    secondMenu={item.secondMenu}
+                    secondPrice={item.secondPrice}
+                  />
+                ))}
+                <Button
+                  status="noHoverBtn"
+                  className="mt-4"
+                  onClick={() => setShowPay(true)}
+                >
+                  결제하기
+                </Button>
+              </>
             ) : (
               <div className="h-[200px] bg-gray-0 rounded-modal flex items-center justify-center text-body text-gray-4">
                 장바구니에 담긴 메뉴가 없습니다.
@@ -87,7 +97,7 @@ function PaymentPage() {
             )}
           </main>
         ) : (
-          <main className="w-full px-5 mt-10">
+          <main className="w-full mt-10 flex justify-center overflow-x-auto">
             <ModalPay
               totalAmount={totalAmount}
               onSubmit={() => navigate("/complete")}
