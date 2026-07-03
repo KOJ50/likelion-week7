@@ -119,7 +119,6 @@ function PaymentPage() {
         </section>
         <ModalPay
           totalAmount={totalAmount}
-          className="w-[568px]"
           onSubmit={() => navigate("/complete")}
         />
       </main>
