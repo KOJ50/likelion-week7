@@ -1,6 +1,7 @@
 import { useState } from "react";
 import FoodCard from "../components/FoodCard.jsx";
-import foodData from "../data/mockFoodCard.js";
+import foodData from "../data/mockFoodCard.js"; // 카테고리 "전체" 선택시
+import foodData2 from "../data/mockFoodCard2.js"; // 카테고리 "분식" 선택시
 import OptionTag from "../components/OptionTag.jsx";
 import NavBar from "../components/NavBar.jsx";
 import ModalMenu from "../components/ModalMenu.jsx";
@@ -10,6 +11,15 @@ const categories = ["전체", "분식", "기타"];
 function MainPage() {
   const [activeCategory, setActiveCategory] = useState("전체");
   const [selectedMenu, setSelectedMenu] = useState(null);
+
+  let displayData;
+  if (activeCategory === "전체") {
+    displayData = [...foodData, ...foodData2];
+  } else if (activeCategory === "분식") {
+    displayData = foodData2;
+  } else {
+    displayData = foodData;
+  }
 
   return (
     <div className="w-full min-h-screen bg-gray-1 flex flex-col items-center">
@@ -29,7 +39,7 @@ function MainPage() {
 
         {/* 음식 카드 리스트 */}
         <div className="grid grid-cols-1 ph:grid-cols-4 gap-6 mt-18 justify-items-center">
-          {foodData.map((food) => (
+          {displayData.map((food) => (
             <div key={food.id} onClick={() => setSelectedMenu(food)}>
               <FoodCard
                 key={food.id}
