@@ -2,7 +2,7 @@ import food1 from "../assets/images/foodCard_1.png";
 
 const skewerMenuItems = [
   {
-    id: "beef-skewer-set",
+    id: "1",
     name: "소고기 꼬치 세트 (5ea)",
     description: "양념 소고기 꼬치 5개 세트",
     price: 15000,
@@ -10,27 +10,30 @@ const skewerMenuItems = [
       {
         id: 1,
         name: "꼬치 추가 (+3,000원)",
+        price: 3000,
       },
     ],
   },
   {
-    id: "chicken-skewer-set",
-    name: "닭꼬치 세트 (5ea)",
-    description: "간장 닭꼬치 5개 세트",
+    id: "2",
+    name: "어묵 (5ea)",
+    description: "어묵 5개 세트",
     price: 12000,
     options: [
       {
         id: 1,
         name: "꼬치 추가 (+3,000원)",
+        price: 3000,
       },
       {
         id: 2,
         name: "떡사리 추가 (+2,000원)",
+        price: 2000,
       },
     ],
   },
   {
-    id: "rice-cake-skewer",
+    id: "3",
     name: "떡꼬치 (3ea)",
     description: "매콤달콤 떡꼬치",
     price: 5000,
@@ -51,71 +54,31 @@ const skewerMenuItems = [
   },
 ];
 
-const foodData = [
+const foodData2 = [
   {
     id: 1,
     image: food1,
-    name: "왕꼬치-1",
+    name: "분식-1",
     rating: 4.6,
-    caption: "꼬치",
+    caption: "떡볶이",
     items: skewerMenuItems,
   },
   {
     id: 2,
     image: food1,
-    name: "왕꼬치-2",
+    name: "분식-2",
     rating: 4.6,
-    caption: "꼬치",
+    caption: "어묵",
     items: skewerMenuItems,
   },
   {
     id: 3,
     image: food1,
-    name: "왕꼬치-3",
+    name: "분식-3",
     rating: 4.6,
-    caption: "꼬치",
-    items: skewerMenuItems,
-  },
-  {
-    id: 4,
-    image: food1,
-    name: "왕꼬치-4",
-    rating: 4.6,
-    caption: "꼬치",
-    items: skewerMenuItems,
-  },
-  {
-    id: 5,
-    image: food1,
-    name: "왕꼬치-5",
-    rating: 4.6,
-    caption: "꼬치",
-    items: skewerMenuItems,
-  },
-  {
-    id: 6,
-    image: food1,
-    name: "왕꼬치-6",
-    rating: 4.6,
-    caption: "꼬치",
-    items: skewerMenuItems,
-  },
-  {
-    id: 7,
-    image: food1,
-    name: "왕꼬치-7",
-    rating: 4.6,
-    caption: "꼬치",
-    items: skewerMenuItems,
-  },
-  {
-    id: 8,
-    image: food1,
-    name: "왕꼬치-8",
-    rating: 4.6,
-    caption: "꼬치",
+    caption: "순대",
     items: skewerMenuItems,
   },
 ];
 
-export default foodData;
+export default foodData2;

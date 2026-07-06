@@ -2,6 +2,7 @@ import { useState } from "react";
 import closeIcon from "../assets/icons/icon_close.svg";
 import Button from "./Button-common";
 import Stepper from "./Stepper";
+import OptionTag from "./OptionTag";
 
 function formatWon(amount) {
   const numericAmount = Number(amount);
@@ -20,6 +21,7 @@ function ModalMenu({
   className = "",
 }) {
   const [quantities, setQuantities] = useState({});
+  const [selectedOptions, setSelectedOptions] = useState({});
 
   if (!isOpen || !menu) {
     return null;
@@ -41,6 +43,23 @@ function ModalMenu({
     onQuantityChange?.(nextQuantities);
   };
 
+  const handleOptionSelect = (itemId, option) => {
+    setSelectedOptions((prev) => {
+      const currentOptions = prev[itemId] || [];
+
+      const isSelected = currentOptions.some(
+        (selected) => selected.id === option.id
+      );
+
+      return {
+        ...prev,
+        [itemId]: isSelected
+          ? currentOptions.filter((selected) => selected.id !== option.id)
+          : [...currentOptions, option],
+      };
+    });
+  };
+
   return (
     <section
       className={`flex w-full flex-col items-start bg-gray-0 px-14 py-12 h-full overflow-y-auto ph:h-[667px] ph:w-[738px] ph:gap-10 ph:rounded-modal ${className}`}
@@ -50,8 +69,7 @@ function ModalMenu({
           <h1 className="text-header">{menu.name}</h1>
 
           <div className="mt-3 flex items-center gap-1 text-body text-gray-3">
-            <span>⭐</span>
-            <span>{menu.rating}</span>
+            <span>⭐ 4.6</span>
           </div>
         </div>
 
@@ -73,7 +91,7 @@ function ModalMenu({
           return (
             <li
               key={item.id}
-              className="flex flex-col gap-3 ph:h-20 ph:flex-row ph:items-center ph:justify-between ph:gap-6"
+              className="flex flex-col gap-3  ph:flex-row ph:items-start ph:justify-between ph:gap-6 ph:py-4"
             >
               <div className="flex min-w-0 flex-col ph:h-full ph:justify-between">
                 <div className="flex flex-col gap-[7px]">
@@ -83,6 +101,23 @@ function ModalMenu({
                 <strong className="text-body-bold">
                   {formatWon(item.price)}
                 </strong>
+                {item.options?.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {item.options.map((option) => (
+                      <OptionTag
+                        key={option.id}
+                        text={option.name}
+                        variant="menu"
+                        isSelected={
+                          selectedOptions[item.id]?.some(
+                            (selected) => selected.id === option.id
+                          ) ?? false
+                        }
+                        onClick={() => handleOptionSelect(item.id, option)}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="flex shrink-0">
