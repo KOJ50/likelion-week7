@@ -69,8 +69,7 @@ function ModalMenu({
           <h1 className="text-header">{menu.name}</h1>
 
           <div className="mt-3 flex items-center gap-1 text-body text-gray-3">
-            <span>⭐</span>
-            <span>{menu.rating}</span>
+            <span>⭐ 4.6</span>
           </div>
         </div>
 

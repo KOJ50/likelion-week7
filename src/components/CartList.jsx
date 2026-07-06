@@ -13,7 +13,7 @@ const CartList = ({
 }) => {
   return (
     <div className="w-[247px] ph:w-[561px] rounded-modal overflow-hidden bg-gray-0">
-      <div className="bg-[#FFDFE3] px-5 py-3 text-body-bold">
+      <div className="bg-red-assisitive px-5 py-3 text-body-bold">
         {restaurantName}
       </div>
 

@@ -159,7 +159,7 @@ function PaymentPage() {
   );
 
   return (
-    <div className="w-full min-h-screen bg-gray-1 flex flex-col">
+    <div className="w-full min-h-screen bg-gray-1 flex flex-col pb-[20px]">
       {/* 헤더 */}
       <header className="fixed top-0 left-0 right-0 z-50 w-full h-[83px] bg-red-primary flex items-center justify-between px-3 ph:px-10 py-[20px] select-none">
         <div className="flex items-center gap-4">
