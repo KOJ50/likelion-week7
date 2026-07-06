@@ -6,6 +6,7 @@ import SignupPage from "./pages/SignupPage";
 import PaymentPage from "./pages/PaymentPage";
 import PaymentCompletePage from "./pages/PaymentCompletePage";
 import CompletePage from "./pages/CompletePage";
+import RechargeCreditPage from "./pages/RechargeCreditPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/payment-complete" element={<PaymentCompletePage />} />
         <Route path="/complete" element={<CompletePage />} />
+        <Route path="/recharge" element={<RechargeCreditPage />} />
       </Routes>
     </BrowserRouter>
   );

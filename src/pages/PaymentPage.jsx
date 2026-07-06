@@ -104,11 +104,11 @@ function PaymentPage() {
               items: restaurant.items.map((item) =>
                 item.id === itemId
                   ? { ...item, quantity: item.quantity + 1 }
-                  : item
+                  : item,
               ),
             }
-          : restaurant
-      )
+          : restaurant,
+      ),
     );
   };
 
@@ -124,11 +124,11 @@ function PaymentPage() {
                       ...item,
                       quantity: Math.max(1, item.quantity - 1),
                     }
-                  : item
+                  : item,
               ),
             }
-          : restaurant
-      )
+          : restaurant,
+      ),
     );
   };
 
@@ -141,10 +141,10 @@ function PaymentPage() {
                 ...restaurant,
                 items: restaurant.items.filter((item) => item.id !== itemId),
               }
-            : restaurant
+            : restaurant,
         )
 
-        .filter((restaurant) => restaurant.items.length > 0)
+        .filter((restaurant) => restaurant.items.length > 0),
     );
   };
 
@@ -153,9 +153,9 @@ function PaymentPage() {
       sum +
       restaurant.items.reduce(
         (itemSum, item) => itemSum + item.price * item.quantity,
-        0
+        0,
       ),
-    0
+    0,
   );
 
   return (
@@ -221,6 +221,7 @@ function PaymentPage() {
             <ModalPay
               totalAmount={totalAmount}
               onSubmit={() => navigate("/complete")}
+              onRechargeCredit={() => navigate("/recharge")}
             />
           </main>
         )}
@@ -250,8 +251,8 @@ function PaymentPage() {
 
         <ModalPay
           totalAmount={totalAmount}
-          className="w-[568px]"
           onSubmit={() => navigate("/complete")}
+          onRechargeCredit={() => navigate("/recharge")}
         />
       </main>
     </div>
