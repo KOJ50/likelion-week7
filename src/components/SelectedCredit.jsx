@@ -1,5 +1,5 @@
 const selectedCreditStatusClass = {
-  default: "border-transparent bg-gray-0 text-gray-5",
+  default: "border-transparent bg-gray-1 text-gray-5",
   selected: "border-green-primary bg-green-secondary text-gray-0",
 };
 
