@@ -24,7 +24,7 @@ function MainPage() {
   return (
     <div className="w-full min-h-screen bg-gray-1 flex flex-col items-center">
       <NavBar title="어쩌구 저쩌구" />
-      <main className="w-full max-w-300 px-4 flex flex-col pt-22.5 pb-25">
+      <main className="w-full max-w-300 px-4 flex flex-col pt-22.5 pb-25 mt-[83px]">
         <div className="flex gap-6 mb-6 justify-center">
           {categories.map((cat) => (
             <OptionTag

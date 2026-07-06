@@ -24,7 +24,7 @@ const NavBar = ({ title }) => {
 
   return (
     <>
-      <header className="w-full h-[83px] bg-red-primary flex items-center justify-between px-3 ph:px-10 py-[20px] select-none">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full h-[83px] bg-red-primary flex items-center justify-between px-3 ph:px-10 py-[20px] select-none">
         <h1
           className="text-white text-lg ph:text-2xl font-bold cursor-pointer whitespace-nowrap"
           onClick={() => navigate("/")}
