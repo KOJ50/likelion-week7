@@ -12,22 +12,58 @@ function PaymentPage() {
 
   const cartItems = [
     {
-      count: 1,
-      mainName: "왕꼬치",
-      firstMenu: "닭꼬치 세트 (5ea)",
-      firstPrice: "12,000",
+      id: 1,
+      restaurantName: "왕꼬치",
+      items: [
+        {
+          id: 1,
+          name: "닭꼬치 세트 (5ea)",
+          price: 22000,
+          quantity: 1,
+        },
+        {
+          id: 2,
+          name: "떡꼬치",
+          price: 5000,
+          quantity: 1,
+        },
+        {
+          id: 3,
+          name: "떡꼬치2",
+          price: 5000,
+          quantity: 1,
+        },
+      ],
     },
     {
-      count: 2,
-      mainName: "왕꼬치",
-      firstMenu: "닭꼬치 세트 (5ea)",
-      firstPrice: "12,000",
-      secondMenu: "떡꼬치",
-      secondPrice: "5,000",
+      id: 2,
+      restaurantName: "왕피자",
+      items: [
+        {
+          id: 4,
+          name: "페퍼로니 피자",
+          price: 22000,
+          quantity: 1,
+        },
+        {
+          id: 5,
+          name: "치즈 피자",
+          price: 19000,
+          quantity: 2,
+        },
+      ],
     },
   ];
 
-  const totalAmount = 17000;
+  const totalAmount = cartItems.reduce(
+    (sum, restaurant) =>
+      sum +
+      restaurant.items.reduce(
+        (itemSum, item) => itemSum + item.price * item.quantity,
+        0
+      ),
+    0
+  );
 
   return (
     <div className="w-full min-h-screen bg-gray-1 flex flex-col">
@@ -47,12 +83,12 @@ function PaymentPage() {
               className="w-6 h-6 ph:w-8 ph:h-8"
             />
           </button>
+
           <h1 className="absolute left-1/2 -translate-x-1/2 text-white text-[36px] ph:text-2xl font-bold">
             장바구니
           </h1>
         </div>
 
-        {/* 모바일 전용 */}
         <button
           className="flex ph:hidden cursor-pointer hover:opacity-70 p-1"
           onClick={() => setShowPay(!showPay)}
@@ -65,19 +101,16 @@ function PaymentPage() {
         </button>
       </header>
 
+      {/* 모바일 */}
       <div className="ph:hidden">
         {!showPay ? (
           <main className="w-full flex flex-col items-center px-5 mt-10 gap-6">
             {cartItems.length > 0 ? (
-              cartItems.map((item, index) => (
+              cartItems.map((restaurant) => (
                 <CartList
-                  key={index}
-                  count={item.count}
-                  mainName={item.mainName}
-                  firstMenu={item.firstMenu}
-                  firstPrice={item.firstPrice}
-                  secondMenu={item.secondMenu}
-                  secondPrice={item.secondPrice}
+                  key={restaurant.id}
+                  restaurantName={restaurant.restaurantName}
+                  items={restaurant.items}
                 />
               ))
             ) : (
@@ -97,18 +130,14 @@ function PaymentPage() {
       </div>
 
       {/* 데스크탑 */}
-      <main className="hidden ph:flex w-full max-w-[1200px] justify-between mt-[90px] px-5 mx-auto gap-6 ">
+      <main className="hidden ph:flex w-full max-w-[1200px] justify-between mt-[90px] px-5 mx-auto gap-6">
         <section className="flex flex-col gap-6">
           {cartItems.length > 0 ? (
-            cartItems.map((item, index) => (
+            cartItems.map((restaurant) => (
               <CartList
-                key={index}
-                count={item.count}
-                mainName={item.mainName}
-                firstMenu={item.firstMenu}
-                firstPrice={item.firstPrice}
-                secondMenu={item.secondMenu}
-                secondPrice={item.secondPrice}
+                key={restaurant.id}
+                restaurantName={restaurant.restaurantName}
+                items={restaurant.items}
               />
             ))
           ) : (
@@ -117,6 +146,7 @@ function PaymentPage() {
             </div>
           )}
         </section>
+
         <ModalPay
           totalAmount={totalAmount}
           className="w-[568px]"
