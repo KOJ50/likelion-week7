@@ -8,7 +8,7 @@ const NavBar = ({ title }) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(() =>
-    Boolean(sessionStorage.getItem(AUTH_STORAGE_KEY)),
+    Boolean(sessionStorage.getItem(AUTH_STORAGE_KEY))
   );
 
   const handleAuthClick = () => {
@@ -24,7 +24,7 @@ const NavBar = ({ title }) => {
 
   return (
     <>
-      <header className="w-full h-[83px] bg-red-primary flex items-center justify-between px-3 ph:px-10 py-[20px] select-none">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full h-[83px] bg-red-primary flex items-center justify-between px-3 ph:px-10 py-[20px] select-none">
         <h1
           className="text-white text-lg ph:text-2xl font-bold cursor-pointer whitespace-nowrap"
           onClick={() => navigate("/")}
@@ -56,10 +56,10 @@ const NavBar = ({ title }) => {
       {isMenuOpen && (
         <>
           <div
-            className="fixed inset-0 z-40"
+            className="fixed top-[83px] right-[263px] left-0 bottom-0 z-40"
             onClick={() => setIsMenuOpen(false)}
           />
-          <div className="fixed top-[83px] right-0 w-[263px] h-[791px] bg-yellow-primary flex flex-col items-center pt-10 gap-6 z-50">
+          <div className="fixed top-[83px] right-0 w-[263px] h-[791px] bg-[#F7F7F7] flex flex-col items-center pt-10 gap-6 z-50">
             <button
               className="text-red-primary text-xl font-semibold"
               onClick={() => {
