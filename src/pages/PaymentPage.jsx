@@ -10,7 +10,7 @@ function PaymentPage() {
   const navigate = useNavigate();
   const [showPay, setShowPay] = useState(false);
 
-  const cartItems = [
+  const [cartItems, setCartItems] = useState([
     {
       id: 1,
       restaurantName: "왕꼬치",
@@ -53,7 +53,44 @@ function PaymentPage() {
         },
       ],
     },
-  ];
+  ]);
+
+  const increaseQuantity = (restaurantId, itemId) => {
+    setCartItems((prev) =>
+      prev.map((restaurant) =>
+        restaurant.id === restaurantId
+          ? {
+              ...restaurant,
+              items: restaurant.items.map((item) =>
+                item.id === itemId
+                  ? { ...item, quantity: item.quantity + 1 }
+                  : item
+              ),
+            }
+          : restaurant
+      )
+    );
+  };
+
+  const decreaseQuantity = (restaurantId, itemId) => {
+    setCartItems((prev) =>
+      prev.map((restaurant) =>
+        restaurant.id === restaurantId
+          ? {
+              ...restaurant,
+              items: restaurant.items.map((item) =>
+                item.id === itemId
+                  ? {
+                      ...item,
+                      quantity: Math.max(1, item.quantity - 1),
+                    }
+                  : item
+              ),
+            }
+          : restaurant
+      )
+    );
+  };
 
   const totalAmount = cartItems.reduce(
     (sum, restaurant) =>
@@ -109,8 +146,11 @@ function PaymentPage() {
               cartItems.map((restaurant) => (
                 <CartList
                   key={restaurant.id}
+                  restaurantId={restaurant.id}
                   restaurantName={restaurant.restaurantName}
                   items={restaurant.items}
+                  onIncrease={increaseQuantity}
+                  onDecrease={decreaseQuantity}
                 />
               ))
             ) : (
@@ -136,8 +176,11 @@ function PaymentPage() {
             cartItems.map((restaurant) => (
               <CartList
                 key={restaurant.id}
+                restaurantId={restaurant.id}
                 restaurantName={restaurant.restaurantName}
                 items={restaurant.items}
+                onIncrease={increaseQuantity}
+                onDecrease={decreaseQuantity}
               />
             ))
           ) : (

@@ -2,7 +2,13 @@ import IconPlus from "../assets/icons/icon_plus.svg?react";
 import IconClose from "../assets/icons/icon_close.svg?react";
 import IconMinus from "../assets/icons/icon_minus.svg?react";
 
-const CartList = ({ restaurantName, items }) => {
+const CartList = ({
+  restaurantName,
+  restaurantId,
+  items,
+  onIncrease,
+  onDecrease,
+}) => {
   return (
     <div className="w-[247px] ph:w-[561px] rounded-small overflow-hidden bg-gray-0">
       <div className="bg-yellow-primary px-5 py-3 text-body-bold">
@@ -26,7 +32,10 @@ const CartList = ({ restaurantName, items }) => {
             </div>
 
             <div className="flex items-center gap-8 mt-3 ph:mt-0">
-              <button className="w-8 h-8 bg-gray-1 rounded-small flex items-center justify-center">
+              <button
+                onClick={() => onDecrease(restaurantId, item.id)}
+                className="w-8 h-8 bg-gray-1 rounded-small flex items-center justify-center"
+              >
                 <IconMinus />
               </button>
 
@@ -34,7 +43,10 @@ const CartList = ({ restaurantName, items }) => {
                 {item.quantity}
               </div>
 
-              <button className="w-8 h-8 bg-gray-1 rounded-small flex items-center justify-center">
+              <button
+                onClick={() => onIncrease(restaurantId, item.id)}
+                className="w-8 h-8 bg-gray-1 rounded-small flex items-center justify-center"
+              >
                 <IconPlus />
               </button>
 
