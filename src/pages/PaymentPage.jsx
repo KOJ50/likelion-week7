@@ -92,6 +92,22 @@ function PaymentPage() {
     );
   };
 
+  const removeItem = (restaurantId, itemId) => {
+    setCartItems((prev) =>
+      prev
+        .map((restaurant) =>
+          restaurant.id === restaurantId
+            ? {
+                ...restaurant,
+                items: restaurant.items.filter((item) => item.id !== itemId),
+              }
+            : restaurant
+        )
+
+        .filter((restaurant) => restaurant.items.length > 0)
+    );
+  };
+
   const totalAmount = cartItems.reduce(
     (sum, restaurant) =>
       sum +
@@ -151,6 +167,7 @@ function PaymentPage() {
                   items={restaurant.items}
                   onIncrease={increaseQuantity}
                   onDecrease={decreaseQuantity}
+                  onRemove={removeItem}
                 />
               ))
             ) : (
@@ -181,6 +198,7 @@ function PaymentPage() {
                 items={restaurant.items}
                 onIncrease={increaseQuantity}
                 onDecrease={decreaseQuantity}
+                onRemove={removeItem}
               />
             ))
           ) : (

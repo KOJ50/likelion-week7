@@ -8,6 +8,7 @@ const CartList = ({
   items,
   onIncrease,
   onDecrease,
+  onRemove,
 }) => {
   return (
     <div className="w-[247px] ph:w-[561px] rounded-small overflow-hidden bg-gray-0">
@@ -50,7 +51,10 @@ const CartList = ({
                 <IconPlus />
               </button>
 
-              <button className="w-8 h-8 bg-gray-1 rounded-small flex items-center justify-center">
+              <button
+                onClick={() => onRemove(restaurantId, item.id)}
+                className="w-8 h-8 bg-gray-1 rounded-small flex items-center justify-center"
+              >
                 <IconClose />
               </button>
             </div>

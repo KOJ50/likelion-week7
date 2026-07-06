@@ -92,7 +92,7 @@ function ModalMenu({
           return (
             <li
               key={item.id}
-              className="flex flex-col gap-3 ph:h-20 ph:flex-row ph:items-center ph:justify-between ph:gap-6"
+              className="flex flex-col gap-3  ph:flex-row ph:items-start ph:justify-between ph:gap-6 ph:py-4"
             >
               <div className="flex min-w-0 flex-col ph:h-full ph:justify-between">
                 <div className="flex flex-col gap-[7px]">
