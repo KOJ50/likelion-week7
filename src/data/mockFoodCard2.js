@@ -10,6 +10,7 @@ const skewerMenuItems = [
       {
         id: 1,
         name: "꼬치 추가 (+3,000원)",
+        price: 3000,
       },
     ],
   },
@@ -22,10 +23,12 @@ const skewerMenuItems = [
       {
         id: 1,
         name: "꼬치 추가 (+3,000원)",
+        price: 3000,
       },
       {
         id: 2,
         name: "떡사리 추가 (+2,000원)",
+        price: 2000,
       },
     ],
   },

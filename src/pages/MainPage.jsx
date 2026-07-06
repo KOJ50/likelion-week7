@@ -38,7 +38,7 @@ function MainPage() {
         </div>
 
         {/* 음식 카드 리스트 */}
-        <div className="grid grid-cols-1 ph:grid-cols-4 gap-6 mt-18 justify-items-center">
+        <div className="grid w-full grid-cols-1 ph:grid-cols-4 gap-6 mt-18 justify-items-center">
           {displayData.map((food) => (
             <div key={food.id} onClick={() => setSelectedMenu(food)}>
               <FoodCard

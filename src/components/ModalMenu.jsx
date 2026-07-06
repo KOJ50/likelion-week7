@@ -2,6 +2,7 @@ import { useState } from "react";
 import closeIcon from "../assets/icons/icon_close.svg";
 import Button from "./Button-common";
 import Stepper from "./Stepper";
+import OptionTag from "./OptionTag";
 
 function formatWon(amount) {
   const numericAmount = Number(amount);
@@ -20,6 +21,7 @@ function ModalMenu({
   className = "",
 }) {
   const [quantities, setQuantities] = useState({});
+  const [selectedOptions, setSelectedOptions] = useState({});
 
   if (!isOpen || !menu) {
     return null;
@@ -39,6 +41,23 @@ function ModalMenu({
 
     setQuantities(nextQuantities);
     onQuantityChange?.(nextQuantities);
+  };
+
+  const handleOptionSelect = (itemId, option) => {
+    setSelectedOptions((prev) => {
+      const currentOptions = prev[itemId] || [];
+
+      const isSelected = currentOptions.some(
+        (selected) => selected.id === option.id
+      );
+
+      return {
+        ...prev,
+        [itemId]: isSelected
+          ? currentOptions.filter((selected) => selected.id !== option.id)
+          : [...currentOptions, option],
+      };
+    });
   };
 
   return (
@@ -83,6 +102,23 @@ function ModalMenu({
                 <strong className="text-body-bold">
                   {formatWon(item.price)}
                 </strong>
+                {item.options?.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {item.options.map((option) => (
+                      <OptionTag
+                        key={option.id}
+                        text={option.name}
+                        variant="menu"
+                        isSelected={
+                          selectedOptions[item.id]?.some(
+                            (selected) => selected.id === option.id
+                          ) ?? false
+                        }
+                        onClick={() => handleOptionSelect(item.id, option)}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="flex shrink-0">
