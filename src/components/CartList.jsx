@@ -1,6 +1,7 @@
 import IconPlus from "../assets/icons/icon_plus.svg?react";
 import IconClose from "../assets/icons/icon_close.svg?react";
 import IconMinus from "../assets/icons/icon_minus.svg?react";
+import OptionTag from "./OptionTag";
 
 const CartList = ({
   restaurantName,
@@ -11,8 +12,8 @@ const CartList = ({
   onRemove,
 }) => {
   return (
-    <div className="w-[247px] ph:w-[561px] rounded-small overflow-hidden bg-gray-0">
-      <div className="bg-yellow-primary px-5 py-3 text-body-bold">
+    <div className="w-[247px] ph:w-[561px] rounded-modal overflow-hidden bg-gray-0">
+      <div className="bg-[#FFDFE3] px-5 py-3 text-body-bold">
         {restaurantName}
       </div>
 
@@ -27,7 +28,19 @@ const CartList = ({
             <div className="flex flex-col gap-2">
               <div className="text-subtitle">{item.name}</div>
 
-              <div className="text-subtitle text-red-primary">
+              {item.options?.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {item.options.map((option) => (
+                    <OptionTag
+                      key={option.id}
+                      text={option.name}
+                      variant="menu"
+                      isSelected={false}
+                    />
+                  ))}
+                </div>
+              )}
+              <div className="text-subtitle text-black-primary">
                 {item.price.toLocaleString()}원
               </div>
             </div>

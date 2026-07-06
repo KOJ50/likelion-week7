@@ -20,18 +20,44 @@ function PaymentPage() {
           name: "닭꼬치 세트 (5ea)",
           price: 22000,
           quantity: 1,
+          options: [
+            {
+              id: 1,
+              name: "꼬치 추가 (+3,000원)",
+            },
+          ],
         },
         {
           id: 2,
           name: "떡꼬치",
           price: 5000,
           quantity: 1,
+          options: [
+            {
+              id: 1,
+              name: "꼬치 추가 (+3,000원)",
+            },
+            {
+              id: 2,
+              name: "떡사리 추가 (+2,000원)",
+            },
+          ],
         },
         {
           id: 3,
           name: "떡꼬치2",
           price: 5000,
           quantity: 1,
+          options: [
+            {
+              id: 1,
+              name: "꼬치 추가 (+3,000원)",
+            },
+            {
+              id: 2,
+              name: "떡사리 추가 (+2,000원)",
+            },
+          ],
         },
       ],
     },
@@ -44,6 +70,20 @@ function PaymentPage() {
           name: "페퍼로니 피자",
           price: 22000,
           quantity: 1,
+          options: [
+            {
+              id: 1,
+              name: "순한맛",
+            },
+            {
+              id: 2,
+              name: "중간맛",
+            },
+            {
+              id: 3,
+              name: "매운맛",
+            },
+          ],
         },
         {
           id: 5,
@@ -121,7 +161,7 @@ function PaymentPage() {
   return (
     <div className="w-full min-h-screen bg-gray-1 flex flex-col">
       {/* 헤더 */}
-      <header className="w-full h-[83px] bg-red-primary flex items-center justify-between px-6 ph:px-10 select-none">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full h-[83px] bg-red-primary flex items-center justify-between px-3 ph:px-10 py-[20px] select-none">
         <div className="flex items-center gap-4">
           <button
             onClick={() => {
@@ -157,7 +197,7 @@ function PaymentPage() {
       {/* 모바일 */}
       <div className="ph:hidden">
         {!showPay ? (
-          <main className="w-full flex flex-col items-center px-5 mt-10 gap-6">
+          <main className="w-full flex flex-col items-center px-5 mt-[110px] gap-6">
             {cartItems.length > 0 ? (
               cartItems.map((restaurant) => (
                 <CartList
@@ -177,7 +217,7 @@ function PaymentPage() {
             )}
           </main>
         ) : (
-          <main className="w-full px-5 mt-10">
+          <main className="w-full px-5 mt-[110px]">
             <ModalPay
               totalAmount={totalAmount}
               onSubmit={() => navigate("/complete")}
@@ -187,7 +227,7 @@ function PaymentPage() {
       </div>
 
       {/* 데스크탑 */}
-      <main className="hidden ph:flex w-full max-w-[1200px] justify-between mt-[90px] px-5 mx-auto gap-6">
+      <main className="hidden ph:flex w-full max-w-[1200px] justify-between mt-[104px] px-5 mx-auto gap-6">
         <section className="flex flex-col gap-6">
           {cartItems.length > 0 ? (
             cartItems.map((restaurant) => (
