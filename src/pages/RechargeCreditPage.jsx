@@ -35,8 +35,7 @@ function RechargeCreditPage() {
         }
 
         alert(
-          error.response?.data?.message ??
-            "크레딧 정보를 불러오지 못했습니다.",
+          error.response?.data?.message ?? "크레딧 정보를 불러오지 못했습니다.",
         );
         setOwnedCredit(0);
       }
@@ -79,7 +78,7 @@ function RechargeCreditPage() {
       <header className="flex h-20.75 w-full items-center justify-between bg-red-primary px-10 py-5 ph:justify-start ph:gap-12">
         <button
           type="button"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/payment")}
           className="flex size-12 cursor-pointer items-center justify-center rounded-small bg-red-secondary"
           aria-label="뒤로가기"
         >

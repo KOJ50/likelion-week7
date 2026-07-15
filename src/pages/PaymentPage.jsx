@@ -28,7 +28,7 @@ function PaymentPage() {
         `${import.meta.env.VITE_API_BASE_URL}/cart`,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
       setCart(response.data);
     } catch (error) {
@@ -60,7 +60,7 @@ function PaymentPage() {
         }
 
         setCreditError(
-          error.response?.data?.message ?? "크레딧 정보를 불러오지 못했습니다."
+          error.response?.data?.message ?? "크레딧 정보를 불러오지 못했습니다.",
         );
       }
     };
@@ -80,7 +80,7 @@ function PaymentPage() {
         },
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
       fetchCart();
     } catch (error) {
@@ -99,7 +99,7 @@ function PaymentPage() {
         },
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       fetchCart();
@@ -116,7 +116,7 @@ function PaymentPage() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       fetchCart();
     } catch (error) {
@@ -129,7 +129,7 @@ function PaymentPage() {
       (sum, item) =>
         sum +
         (item.menu.price + (item.menu_option?.price ?? 0)) * item.quantity,
-      0
+      0,
     ) ?? 0;
 
   const handlePaymentSubmit = () => {
@@ -172,7 +172,7 @@ function PaymentPage() {
           <button
             onClick={() => {
               if (showPay) setShowPay(false);
-              else navigate(-1);
+              else navigate("/");
             }}
             className="cursor-pointer hover:opacity-70 p-1"
           >
