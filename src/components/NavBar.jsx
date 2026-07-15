@@ -1,25 +1,34 @@
 import { useNavigate } from "react-router-dom";
 import Cart from "./Cart.jsx";
 import { useState } from "react";
-
-const AUTH_STORAGE_KEY = "authUser";
+import { logout } from "../apis/member";
+import { clearAccessToken, getAccessToken } from "../apis/axiosInstance";
+import CurrentCredit from "./CurrentCredit.jsx";
 
 const NavBar = ({ title }) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(() =>
-    Boolean(sessionStorage.getItem(AUTH_STORAGE_KEY))
-  );
+  const [isLoggedIn, setIsLoggedIn] = useState(() => Boolean(getAccessToken()));
 
-  const handleAuthClick = () => {
+  const handleAuthClick = async () => {
     if (!isLoggedIn) {
       navigate("/login");
       return;
     }
 
-    sessionStorage.removeItem(AUTH_STORAGE_KEY);
-    setIsLoggedIn(false);
-    navigate("/login");
+    try {
+      await logout();
+    } catch (error) {
+      if (error.response?.status !== 401) {
+        alert(
+          error.response?.data?.message ?? "로그아웃 중 오류가 발생했습니다.",
+        );
+      }
+    } finally {
+      clearAccessToken();
+      setIsLoggedIn(false);
+      navigate("/login");
+    }
   };
 
   return (
@@ -34,6 +43,7 @@ const NavBar = ({ title }) => {
 
         {/* 데스크탑 메뉴 */}
         <div className="hidden ph:flex items-center ph:gap-6 text-white min-w-max">
+          <CurrentCredit onClick={() => navigate("/recharge")} />
           <Cart count={1} onClick={() => navigate("/payment")} />
           <button
             onClick={handleAuthClick}

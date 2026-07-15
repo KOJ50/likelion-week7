@@ -3,9 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 import Button from "../components/Button-common";
 import Input from "../components/Input";
-import { MOCK_USER } from "../data/mockUser";
-
-const AUTH_STORAGE_KEY = "authUser";
+import { login } from "../apis/member";
+import { saveAccessToken } from "../apis/axiosInstance";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -13,8 +12,12 @@ function LoginPage() {
     userId: "",
     password: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isLoginReady = loginForm.userId.trim() && loginForm.password.trim();
+  const isLoginReady =
+    Boolean(loginForm.userId.trim()) &&
+    Boolean(loginForm.password.trim()) &&
+    !isSubmitting;
 
   const handleChange = (event) => {
     const { id, value } = event.target;
@@ -25,22 +28,32 @@ function LoginPage() {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (
-      loginForm.userId === MOCK_USER.id &&
-      loginForm.password === MOCK_USER.pw
-    ) {
-      sessionStorage.setItem(
-        AUTH_STORAGE_KEY,
-        JSON.stringify({ id: MOCK_USER.id }),
-      );
-      navigate("/");
+    if (!isLoginReady) {
       return;
     }
 
-    alert("로그인 정보가 올바르지 않습니다.");
+    try {
+      setIsSubmitting(true);
+
+      const data = await login({
+        loginId: loginForm.userId.trim(),
+        password: loginForm.password,
+      });
+
+      saveAccessToken(data.result?.access_token);
+      navigate("/");
+    } catch (error) {
+      alert(
+        error.response?.data?.message ??
+          error.message ??
+          "로그인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

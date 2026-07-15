@@ -1,14 +1,18 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CartList from "../components/CartList.jsx";
 import ModalPay from "../components/ModalPay.jsx";
 import pointerIcon from "../assets/icons/icon_pointer.png";
 import cardIcon from "../assets/icons/icon_card.svg";
 import cartIcon from "../assets/icons/icon_cart.svg";
+import { getCredit } from "../apis/credit.js";
+import { clearAccessToken, getAccessToken } from "../apis/axiosInstance.js";
 
 function PaymentPage() {
   const navigate = useNavigate();
   const [showPay, setShowPay] = useState(false);
+  const [ownedCredit, setOwnedCredit] = useState(null);
+  const [creditError, setCreditError] = useState("");
 
   const [cartItems, setCartItems] = useState([
     {
@@ -95,6 +99,41 @@ function PaymentPage() {
     },
   ]);
 
+  useEffect(() => {
+    if (!getAccessToken()) {
+      navigate("/login", { replace: true });
+      return undefined;
+    }
+
+    const controller = new AbortController();
+
+    const fetchCredit = async () => {
+      try {
+        const data = await getCredit({ signal: controller.signal });
+        setOwnedCredit(data.credit);
+      } catch (error) {
+        if (error.code === "ERR_CANCELED") {
+          return;
+        }
+
+        if (error.response?.status === 401) {
+          clearAccessToken();
+          navigate("/login", { replace: true });
+          return;
+        }
+
+        setCreditError(
+          error.response?.data?.message ??
+            "크레딧 정보를 불러오지 못했습니다.",
+        );
+      }
+    };
+
+    fetchCredit();
+
+    return () => controller.abort();
+  }, [navigate]);
+
   const increaseQuantity = (restaurantId, itemId) => {
     setCartItems((prev) =>
       prev.map((restaurant) =>
@@ -158,6 +197,38 @@ function PaymentPage() {
     0,
   );
 
+  const handlePaymentSubmit = () => {
+    if (ownedCredit - totalAmount < 0) {
+      navigate("/recharge");
+      return;
+    }
+
+    navigate("/complete");
+  };
+
+  const renderPaymentModal = () => {
+    if (creditError) {
+      return <p className="text-body text-red-primary">{creditError}</p>;
+    }
+
+    if (ownedCredit === null) {
+      return (
+        <p className="text-body text-gray-3">
+          크레딧 정보를 불러오는 중입니다.
+        </p>
+      );
+    }
+
+    return (
+      <ModalPay
+        totalAmount={totalAmount}
+        ownedCredit={ownedCredit}
+        onSubmit={handlePaymentSubmit}
+        onRechargeCredit={() => navigate("/recharge")}
+      />
+    );
+  };
+
   return (
     <div className="w-full min-h-screen bg-gray-1 flex flex-col pb-[20px]">
       {/* 헤더 */}
@@ -217,12 +288,8 @@ function PaymentPage() {
             )}
           </main>
         ) : (
-          <main className="w-full px-5 mt-[110px]">
-            <ModalPay
-              totalAmount={totalAmount}
-              onSubmit={() => navigate("/complete")}
-              onRechargeCredit={() => navigate("/recharge")}
-            />
+          <main className="flex w-full justify-center px-5 mt-[110px]">
+            {renderPaymentModal()}
           </main>
         )}
       </div>
@@ -249,11 +316,7 @@ function PaymentPage() {
           )}
         </section>
 
-        <ModalPay
-          totalAmount={totalAmount}
-          onSubmit={() => navigate("/complete")}
-          onRechargeCredit={() => navigate("/recharge")}
-        />
+        {renderPaymentModal()}
       </main>
     </div>
   );
