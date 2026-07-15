@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import Button from "../components/Button-common";
 import Input from "../components/Input";
+import { signup } from "../apis/member";
 
 const PASSWORD_REGEX =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,16}$/;
@@ -13,13 +14,17 @@ function SignupPage() {
     userId: "",
     password: "",
     passwordConfirm: "",
+    name: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isPasswordValid = PASSWORD_REGEX.test(signupForm.password);
   const isSignupReady =
     Boolean(signupForm.userId.trim()) &&
     isPasswordValid &&
-    signupForm.password === signupForm.passwordConfirm;
+    signupForm.password === signupForm.passwordConfirm &&
+    Boolean(signupForm.name.trim()) &&
+    !isSubmitting;
   const isPasswordError = Boolean(signupForm.password) && !isPasswordValid;
   const isPasswordConfirmError =
     Boolean(signupForm.passwordConfirm) &&
@@ -34,15 +39,32 @@ function SignupPage() {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!isSignupReady) {
       return;
     }
 
-    alert("회원가입이 완료되었습니다.");
-    navigate("/login");
+    try {
+      setIsSubmitting(true);
+
+      const data = await signup({
+        loginId: signupForm.userId.trim(),
+        password: signupForm.password,
+        name: signupForm.name.trim(),
+      });
+
+      alert(data.message);
+      navigate("/login");
+    } catch (error) {
+      alert(
+        error.response?.data?.message ??
+          "회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -89,6 +111,16 @@ function SignupPage() {
               maxLength={16}
               status={isPasswordConfirmError ? "error" : "default"}
               value={signupForm.passwordConfirm}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="flex w-full flex-col gap-3 text-body">
+            이름
+            <Input
+              id="name"
+              placeholder="이름을 입력하세요"
+              value={signupForm.name}
               onChange={handleChange}
             />
           </div>
