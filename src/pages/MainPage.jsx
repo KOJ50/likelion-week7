@@ -1,25 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FoodCard from "../components/FoodCard.jsx";
-import foodData from "../data/mockFoodCard.js"; // 카테고리 "전체" 선택시
-import foodData2 from "../data/mockFoodCard2.js"; // 카테고리 "분식" 선택시
+// import foodData from "../data/mockFoodCard.js"; // 카테고리 "전체" 선택시
+// import foodData2 from "../data/mockFoodCard2.js"; // 카테고리 "분식" 선택시
 import OptionTag from "../components/OptionTag.jsx";
 import NavBar from "../components/NavBar.jsx";
 import ModalMenu from "../components/ModalMenu.jsx";
+import axios from "axios";
+import food1 from "../assets/images/foodCard_1.png";
 
 const categories = ["전체", "분식", "기타"];
 
 function MainPage() {
   const [activeCategory, setActiveCategory] = useState("전체");
-  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [selectedMenu, setSelectedMenu] = useState();
+  const [menus, setMenus] = useState([]);
 
-  let displayData;
+  useEffect(() => {
+    const fetchMenus = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/stores`
+        );
+        setMenus(response.data.result?.stores ?? []);
+      } catch (error) {
+        setMenus([]);
+        if (error.response?.status === 404) {
+          console.log("메뉴가 없습니다.");
+        } else if (error.response?.status === 401) {
+          console.log("인증이 필요합니다.");
+        } else {
+          console.error(error);
+        }
+      }
+    };
+
+    fetchMenus();
+  }, []);
+
+  const handleMenuClick = async (id) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/menu/${id}`
+      );
+
+      setSelectedMenu(response.data.result);
+    } catch (error) {
+      if (error.response?.status === 404) {
+        console.log("메뉴가 없습니다");
+      } else {
+        console.error(error);
+      }
+    }
+  };
+
+  /* let displayData;
   if (activeCategory === "전체") {
     displayData = [...foodData, ...foodData2];
   } else if (activeCategory === "분식") {
     displayData = foodData2;
   } else {
     displayData = foodData;
-  }
+  } */
 
   return (
     <div className="w-full min-h-screen bg-gray-1 flex flex-col items-center">
@@ -39,14 +80,14 @@ function MainPage() {
 
         {/* 음식 카드 리스트 */}
         <div className="grid w-full grid-cols-1 ph:grid-cols-4 gap-6 mt-18 justify-items-center">
-          {displayData.map((food) => (
-            <div key={food.id} onClick={() => setSelectedMenu(food)}>
+          {menus.map((food) => (
+            <div key={food.id} onClick={() => handleMenuClick(food.id)}>
               <FoodCard
                 key={food.id}
-                image={food.image}
+                image={food1}
                 name={food.name}
                 rate={food.rating}
-                caption={food.caption}
+                caption={food.category}
               />
             </div>
           ))}

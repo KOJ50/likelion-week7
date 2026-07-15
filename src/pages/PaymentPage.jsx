@@ -5,158 +5,95 @@ import ModalPay from "../components/ModalPay.jsx";
 import pointerIcon from "../assets/icons/icon_pointer.png";
 import cardIcon from "../assets/icons/icon_card.svg";
 import cartIcon from "../assets/icons/icon_cart.svg";
+import axios from "axios";
+import { useEffect } from "react";
 
 function PaymentPage() {
   const navigate = useNavigate();
   const [showPay, setShowPay] = useState(false);
 
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      restaurantName: "왕꼬치",
-      items: [
-        {
-          id: 1,
-          name: "닭꼬치 세트 (5ea)",
-          price: 22000,
-          quantity: 1,
-          options: [
-            {
-              id: 1,
-              name: "꼬치 추가 (+3,000원)",
-            },
-          ],
-        },
-        {
-          id: 2,
-          name: "떡꼬치",
-          price: 5000,
-          quantity: 1,
-          options: [
-            {
-              id: 1,
-              name: "꼬치 추가 (+3,000원)",
-            },
-            {
-              id: 2,
-              name: "떡사리 추가 (+2,000원)",
-            },
-          ],
-        },
-        {
-          id: 3,
-          name: "떡꼬치2",
-          price: 5000,
-          quantity: 1,
-          options: [
-            {
-              id: 1,
-              name: "꼬치 추가 (+3,000원)",
-            },
-            {
-              id: 2,
-              name: "떡사리 추가 (+2,000원)",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 2,
-      restaurantName: "왕피자",
-      items: [
-        {
-          id: 4,
-          name: "페퍼로니 피자",
-          price: 22000,
-          quantity: 1,
-          options: [
-            {
-              id: 1,
-              name: "순한맛",
-            },
-            {
-              id: 2,
-              name: "중간맛",
-            },
-            {
-              id: 3,
-              name: "매운맛",
-            },
-          ],
-        },
-        {
-          id: 5,
-          name: "치즈 피자",
-          price: 19000,
-          quantity: 2,
-        },
-      ],
-    },
-  ]);
+  const [cart, setCart] = useState([]);
+  const token = localStorage.getItem("accessToken");
 
-  const increaseQuantity = (restaurantId, itemId) => {
-    setCartItems((prev) =>
-      prev.map((restaurant) =>
-        restaurant.id === restaurantId
-          ? {
-              ...restaurant,
-              items: restaurant.items.map((item) =>
-                item.id === itemId
-                  ? { ...item, quantity: item.quantity + 1 }
-                  : item,
-              ),
-            }
-          : restaurant,
-      ),
-    );
+  useEffect(() => {
+    fetchCart();
+  }, []);
+
+  async function fetchCart() {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/cart`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setCart(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const increaseQuantity = async (item) => {
+    try {
+      await axios.patch(
+        `${import.meta.env.VITE_API_BASE_URL}/cart/items/${item.id}`,
+        {
+          quantity: item.quantity + 1,
+          menu_option_id: item.menu_option.id,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      fetchCart();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const decreaseQuantity = (restaurantId, itemId) => {
-    setCartItems((prev) =>
-      prev.map((restaurant) =>
-        restaurant.id === restaurantId
-          ? {
-              ...restaurant,
-              items: restaurant.items.map((item) =>
-                item.id === itemId
-                  ? {
-                      ...item,
-                      quantity: Math.max(1, item.quantity - 1),
-                    }
-                  : item,
-              ),
-            }
-          : restaurant,
-      ),
-    );
+  const decreaseQuantity = async (item) => {
+    if (item.quantity <= 1) return;
+    try {
+      await axios.patch(
+        `${import.meta.env.VITE_API_BASE_URL}/cart/items/${item.id}`,
+        {
+          quantity: item.quantity - 1,
+          menu_option_id: item.menu_option.id,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      fetchCart();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const removeItem = (restaurantId, itemId) => {
-    setCartItems((prev) =>
-      prev
-        .map((restaurant) =>
-          restaurant.id === restaurantId
-            ? {
-                ...restaurant,
-                items: restaurant.items.filter((item) => item.id !== itemId),
-              }
-            : restaurant,
-        )
-
-        .filter((restaurant) => restaurant.items.length > 0),
-    );
+  const removeItem = async (item) => {
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/cart/items/${item.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      fetchCart();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const totalAmount = cartItems.reduce(
-    (sum, restaurant) =>
-      sum +
-      restaurant.items.reduce(
-        (itemSum, item) => itemSum + item.price * item.quantity,
-        0,
-      ),
-    0,
-  );
+  const totalAmount =
+    cart?.items?.reduce(
+      (sum, item) =>
+        sum +
+        (item.menu.price + (item.menu_option?.price ?? 0)) * item.quantity,
+      0
+    ) ?? 0;
 
   return (
     <div className="w-full min-h-screen bg-gray-1 flex flex-col pb-[20px]">
@@ -198,18 +135,14 @@ function PaymentPage() {
       <div className="ph:hidden">
         {!showPay ? (
           <main className="w-full flex flex-col items-center px-5 mt-[110px] gap-6">
-            {cartItems.length > 0 ? (
-              cartItems.map((restaurant) => (
-                <CartList
-                  key={restaurant.id}
-                  restaurantId={restaurant.id}
-                  restaurantName={restaurant.restaurantName}
-                  items={restaurant.items}
-                  onIncrease={increaseQuantity}
-                  onDecrease={decreaseQuantity}
-                  onRemove={removeItem}
-                />
-              ))
+            {cart?.items?.length > 0 ? (
+              <CartList
+                restaurantName={cart.store.name}
+                items={cart.items}
+                onIncrease={increaseQuantity}
+                onDecrease={decreaseQuantity}
+                onRemove={removeItem}
+              />
             ) : (
               <div className="h-[200px] bg-gray-0 rounded-modal flex items-center justify-center text-body text-gray-4">
                 장바구니에 담긴 메뉴가 없습니다.
@@ -230,18 +163,14 @@ function PaymentPage() {
       {/* 데스크탑 */}
       <main className="hidden ph:flex w-full max-w-[1200px] justify-between mt-[104px] px-5 mx-auto gap-6">
         <section className="flex flex-col gap-6">
-          {cartItems.length > 0 ? (
-            cartItems.map((restaurant) => (
-              <CartList
-                key={restaurant.id}
-                restaurantId={restaurant.id}
-                restaurantName={restaurant.restaurantName}
-                items={restaurant.items}
-                onIncrease={increaseQuantity}
-                onDecrease={decreaseQuantity}
-                onRemove={removeItem}
-              />
-            ))
+          {cart?.items?.length > 0 ? (
+            <CartList
+              restaurantName={cart.store.name}
+              items={cart.items}
+              onIncrease={increaseQuantity}
+              onDecrease={decreaseQuantity}
+              onRemove={removeItem}
+            />
           ) : (
             <div className="w-[561px] h-[200px] bg-gray-0 rounded-modal flex items-center justify-center text-body text-gray-4">
               장바구니에 담긴 메뉴가 없습니다.

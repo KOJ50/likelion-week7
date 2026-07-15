@@ -4,7 +4,6 @@ import OptionTag from "./OptionTag";
 
 const CartList = ({
   restaurantName,
-  restaurantId,
   items,
   onIncrease,
   onDecrease,
@@ -25,34 +24,31 @@ const CartList = ({
             }`}
           >
             <div className="flex flex-col gap-2">
-              <div className="text-subtitle">{item.name}</div>
+              <div className="text-subtitle">{item.menu.name}</div>
 
-              {item.options?.length > 0 && (
+              {item.menu_option && (
                 <div className="flex flex-wrap gap-2">
-                  {item.options.map((option) => (
-                    <OptionTag
-                      key={option.id}
-                      text={option.name}
-                      variant="menu"
-                      isSelected={false}
-                    />
-                  ))}
+                  <OptionTag
+                    text={item.menu_option.option}
+                    variant="menu"
+                    isSelected={false}
+                  />
                 </div>
               )}
               <div className="text-subtitle text-black-primary">
-                {item.price.toLocaleString()}원
+                {item.menu.price.toLocaleString()}원
               </div>
             </div>
 
             <div className="flex items-center gap-8 mt-3 ph:mt-0">
               <Stepper
                 quantity={item.quantity}
-                onDecrease={() => onDecrease(restaurantId, item.id)}
-                onIncrease={() => onIncrease(restaurantId, item.id)}
+                onDecrease={() => onDecrease(item)}
+                onIncrease={() => onIncrease(item)}
               />
 
               <button
-                onClick={() => onRemove(restaurantId, item.id)}
+                onClick={() => onRemove(item)}
                 className="w-8 h-8 bg-gray-1 rounded-small flex items-center justify-center"
               >
                 <IconClose />
