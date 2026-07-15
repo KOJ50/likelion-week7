@@ -22,9 +22,7 @@ function ModalMenu({ menu, isOpen = true, onClose, className = "" }) {
     return null;
   }
 
-  // const menuItems = menu.items ?? [];
-  const menuOptions = menu.menu_options ?? [];
-  const quantity = quantities[menu.id] ?? 1;
+  const menuItems = menu.items ?? [];
   const token = localStorage.getItem("accessToken");
 
   const handleQuantityChange = (itemId, amount) => {
@@ -43,13 +41,9 @@ function ModalMenu({ menu, isOpen = true, onClose, className = "" }) {
     }));
   };
 
-  const addToCart = async () => {
-    const selectedOption = selectedOptions[menu.id];
-
-    if (menuOptions.length > 0 && !selectedOption) {
-      alert("옵션을 선택해주세요.");
-      return;
-    }
+  const addToCart = async (item) => {
+    const selectedOption = selectedOptions[item.id];
+    const quantity = quantities[item.id] ?? 1;
 
     try {
       await axios.post(
@@ -57,7 +51,7 @@ function ModalMenu({ menu, isOpen = true, onClose, className = "" }) {
         {
           items: [
             {
-              menu_id: menu.id,
+              menu_id: item.id,
               quantity: quantity,
               menu_option_id: selectedOption?.id ?? null,
             },
@@ -95,47 +89,65 @@ function ModalMenu({ menu, isOpen = true, onClose, className = "" }) {
       <div className="mt-8 h-px w-full bg-gray-2 ph:mt-0" />
 
       <ul className="mt-8 flex w-full flex-col gap-14 ph:mt-0">
-        <li className="flex flex-col gap-3 ph:flex-row ph:items-start ph:justify-between ph:gap-6 ph:py-4">
-          <div className="flex min-w-0 flex-col">
-            <div className="flex flex-col gap-[7px]">
-              <p className="text-caption text-gray-3">{menu.description}</p>
-            </div>
+        {menuItems.map((item) => {
+          const menuOptions = item.menu_options ?? [];
+          const quantity = quantities[item.id] ?? 1;
 
-            <strong className="mt-2 text-body-bold">
-              {formatWon(menu.price)}
-            </strong>
+          return (
+            <li
+              key={item.id}
+              className="flex flex-col gap-3 ph:flex-row ph:items-start ph:justify-between ph:gap-6 ph:py-4"
+            >
+              <div className="flex min-w-0 flex-col">
+                <div className="flex flex-col gap-[7px]">
+                  <h2 className="text-body">{item.name}</h2>
+                  <p className="text-caption text-gray-3">
+                    {item.description}
+                  </p>
+                </div>
 
-            {menuOptions.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {menuOptions.map((option) => (
-                  <OptionTag
-                    key={option.id}
-                    text={
-                      option.price > 0
-                        ? `${option.content} (+${formatWon(option.price)})`
-                        : option.content
-                    }
-                    variant="menu"
-                    isSelected={selectedOptions[menu.id]?.id === option.id}
-                    onClick={() => handleOptionSelect(menu.id, option)}
-                  />
-                ))}
+                <strong className="mt-2 text-body-bold">
+                  {formatWon(item.price)}
+                </strong>
+
+                {menuOptions.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {menuOptions.map((option) => (
+                      <OptionTag
+                        key={option.id}
+                        text={
+                          option.price > 0
+                            ? `${option.content} (+${formatWon(option.price)})`
+                            : option.content
+                        }
+                        variant="menu"
+                        isSelected={
+                          selectedOptions[item.id]?.id === option.id
+                        }
+                        onClick={() => handleOptionSelect(item.id, option)}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          <div className="flex items-center gap-3 shrink-0">
-            <Stepper
-              quantity={quantity}
-              onDecrease={() => handleQuantityChange(menu.id, -1)}
-              onIncrease={() => handleQuantityChange(menu.id, 1)}
-            />
+              <div className="flex items-center gap-3 shrink-0">
+                <Stepper
+                  quantity={quantity}
+                  onDecrease={() => handleQuantityChange(item.id, -1)}
+                  onIncrease={() => handleQuantityChange(item.id, 1)}
+                />
 
-            <Button className="w-[167px]" onClick={addToCart}>
-              담기
-            </Button>
-          </div>
-        </li>
+                <Button
+                  className="w-[167px]"
+                  onClick={() => addToCart(item)}
+                >
+                  담기
+                </Button>
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
