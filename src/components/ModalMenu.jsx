@@ -22,7 +22,6 @@ function ModalMenu({ menu, isOpen = true, onClose, className = "" }) {
     return null;
   }
 
-  // const menuItems = menu.items ?? [];
   const menuOptions = menu.menu_options ?? [];
   const quantity = quantities[menu.id] ?? 1;
   const token = localStorage.getItem("accessToken");
