@@ -2,11 +2,6 @@ import { useState } from "react";
 import Button from "./Button-common";
 import RechargeCredit from "./RechargeCredit";
 import SelectedCredit from "./SelectedCredit";
-import { MOCK_USER } from "../data/mockUser";
-
-const mockPayment = {
-  totalAmount: 2000,
-};
 
 const CREDIT_OPTIONS = [1000, 3000, 5000, 10000];
 
@@ -19,24 +14,24 @@ const formatDeductedCredit = (amount) =>
 function ModalPay({
   variant = "default",
   varient,
-  totalAmount = mockPayment.totalAmount,
+  totalAmount,
   creditOptions = CREDIT_OPTIONS,
-  initialSelectedCredit = 3000,
-  ownedCredit = MOCK_USER.credit,
+  initialSelectedCredit = CREDIT_OPTIONS[0],
+  ownedCredit = 0,
   onSubmit,
   onRechargeCredit,
+  isSubmitting = false,
   className = "",
 }) {
   const currentVariant = varient ?? variant;
   const [selectedCredit, setSelectedCredit] = useState(initialSelectedCredit);
-  const paymentTotalAmount = totalAmount ?? mockPayment.totalAmount;
-  const deductionCredit = paymentTotalAmount;
+  const deductionCredit = totalAmount;
   const remainingCredit = ownedCredit - deductionCredit;
   const chargedCredit = ownedCredit + selectedCredit;
 
   const handleSubmit = () => {
     onSubmit?.({
-      totalAmount: paymentTotalAmount,
+      totalAmount,
     });
   };
 
@@ -98,8 +93,9 @@ function ModalPay({
           status="noHoverBtn"
           className="self-center"
           onClick={handleCreditSubmit}
+          disabled={isSubmitting}
         >
-          충전하기
+          {isSubmitting ? "충전 중..." : "충전하기"}
         </Button>
       </section>
     );
@@ -114,7 +110,7 @@ function ModalPay({
       <div className="flex w-63.25 flex-col gap-11 ph:w-118">
         <div className="inline-flex items-center justify-between text-body-bold">
           <span>총 결제금액</span>
-          <span>{formatWon(paymentTotalAmount)}</span>
+          <span>{formatWon(totalAmount)}</span>
         </div>
 
         <div className="flex flex-col gap-3.75">
