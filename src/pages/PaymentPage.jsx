@@ -18,10 +18,6 @@ function PaymentPage() {
   const [cart, setCart] = useState([]);
   const token = localStorage.getItem("accessToken");
 
-  useEffect(() => {
-    fetchCart();
-  }, []);
-
   async function fetchCart() {
     try {
       const response = await axios.get(

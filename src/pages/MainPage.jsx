@@ -37,13 +37,29 @@ function MainPage() {
     fetchMenus();
   }, []);
 
-  const handleMenuClick = async (id) => {
+  const handleMenuClick = async (store) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/menu/${id}`
+        `${import.meta.env.VITE_API_BASE_URL}/menu`,
+        { params: { store_id: store.id } }
+      );
+      const storeMenus = (response.data.result?.menus ?? []).filter(
+        (menu) => Number(menu.store_id) === Number(store.id)
+      );
+      const menuDetails = await Promise.all(
+        storeMenus.map(async (menu) => {
+          const detailResponse = await axios.get(
+            `${import.meta.env.VITE_API_BASE_URL}/menu/${menu.id}`
+          );
+
+          return detailResponse.data.result;
+        })
       );
 
-      setSelectedMenu(response.data.result);
+      setSelectedMenu({
+        name: store.name,
+        items: menuDetails,
+      });
     } catch (error) {
       if (error.response?.status === 404) {
         console.log("메뉴가 없습니다");
@@ -81,7 +97,7 @@ function MainPage() {
         {/* 음식 카드 리스트 */}
         <div className="grid w-full grid-cols-1 ph:grid-cols-4 gap-6 mt-18 justify-items-center">
           {menus.map((food) => (
-            <div key={food.id} onClick={() => handleMenuClick(food.id)}>
+            <div key={food.id} onClick={() => handleMenuClick(food)}>
               <FoodCard
                 key={food.id}
                 image={food1}
