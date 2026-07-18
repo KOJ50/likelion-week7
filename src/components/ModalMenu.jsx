@@ -47,7 +47,7 @@ function ModalMenu({ menu, isOpen = true, onClose, className = "" }) {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/cart/items`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/carts/items`,
         {
           items: [
             {
