@@ -35,6 +35,22 @@ function MainPage() {
     fetchMenus();
   }, []);
 
+  useEffect(() => {
+    if (!selectedMenu) {
+      return undefined;
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setSelectedMenu(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedMenu]);
+
   const handleMenuClick = async (store) => {
     try {
       const response = await axios.get(
@@ -105,7 +121,14 @@ function MainPage() {
       </main>
       {/* 모달 */}
       {selectedMenu && (
-        <div className="fixed top-[83px] bottom-0 left-0 right-0 bg-black/50 flex items-center justify-center z-50">
+        <div
+          className="fixed top-[83px] bottom-0 left-0 right-0 bg-black/50 flex items-center justify-center z-50"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              setSelectedMenu(null);
+            }
+          }}
+        >
           <ModalMenu
             menu={selectedMenu}
             onClose={() => setSelectedMenu(null)}
