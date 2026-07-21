@@ -5,6 +5,7 @@ import Button from "../components/Button-common";
 import Input from "../components/Input";
 import { login } from "../apis/member";
 import { saveAccessToken } from "../apis/axiosInstance";
+import { KakaoLoginButton } from "../components/KakaoLoginButton";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ function LoginPage() {
       alert(
         error.response?.data?.message ??
           error.message ??
-          "로그인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+          "로그인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
       );
     } finally {
       setIsSubmitting(false);
@@ -105,6 +106,8 @@ function LoginPage() {
             로그인
           </Button>
         </div>
+
+        <KakaoLoginButton />
       </form>
     </main>
   );
