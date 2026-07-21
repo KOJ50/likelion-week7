@@ -7,6 +7,7 @@ import PaymentPage from "./pages/PaymentPage";
 import PaymentCompletePage from "./pages/PaymentCompletePage";
 import CompletePage from "./pages/CompletePage";
 import RechargeCreditPage from "./pages/RechargeCreditPage";
+import KakaoCallback from "./pages/KakaoCallback";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/payment-complete" element={<PaymentCompletePage />} />
         <Route path="/complete" element={<CompletePage />} />
         <Route path="/recharge" element={<RechargeCreditPage />} />
+        <Route path="/auth/kakao/callback" element={<KakaoCallback />} />
       </Routes>
     </BrowserRouter>
   );
