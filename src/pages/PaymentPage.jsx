@@ -69,7 +69,7 @@ function PaymentPage() {
   const increaseQuantity = async (item) => {
     try {
       await axios.patch(
-        `${import.meta.env.VITE_API_BASE_URL}/cart/items/${item.id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/carts/items/${item.id}`,
         {
           quantity: item.quantity + 1,
           menu_option_id: item.menu_option.id,
@@ -88,7 +88,7 @@ function PaymentPage() {
     if (item.quantity <= 1) return;
     try {
       await axios.patch(
-        `${import.meta.env.VITE_API_BASE_URL}/cart/items/${item.id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/carts/items/${item.id}`,
         {
           quantity: item.quantity - 1,
           menu_option_id: item.menu_option.id,
@@ -107,7 +107,7 @@ function PaymentPage() {
   const removeItem = async (item) => {
     try {
       await axios.delete(
-        `${import.meta.env.VITE_API_BASE_URL}/cart/items/${item.id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/carts/items/${item.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
