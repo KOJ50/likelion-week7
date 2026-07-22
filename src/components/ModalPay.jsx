@@ -21,6 +21,7 @@ function ModalPay({
   onSubmit,
   onRechargeCredit,
   isSubmitting = false,
+  disabled = false,
   className = "",
 }) {
   const currentVariant = varient ?? variant;
@@ -148,8 +149,9 @@ function ModalPay({
         status="noHoverBtn"
         className="self-center"
         onClick={handleSubmit}
+        disabled={disabled || isSubmitting}
       >
-        결제하기
+        {isSubmitting ? "결제 중..." : "결제하기"}
       </Button>
     </section>
   );

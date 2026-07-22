@@ -58,7 +58,7 @@ function MainPage() {
         { params: { store_id: store.id } }
       );
       const storeMenus = (response.data.result?.menus ?? []).filter(
-        (menu) => Number(menu.store_id) === Number(store.id)
+        (menu) => Number(menu.store_id ?? menu.storeId) === Number(store.id)
       );
       const menuDetails = await Promise.all(
         storeMenus.map(async (menu) => {
