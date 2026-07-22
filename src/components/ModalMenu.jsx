@@ -3,7 +3,7 @@ import closeIcon from "../assets/icons/icon_close.svg";
 import Button from "./Button-common";
 import Stepper from "./Stepper";
 import OptionTag from "./OptionTag";
-import axios from "axios";
+import { addCartItem } from "../apis/cart";
 
 function formatWon(amount) {
   const numericAmount = Number(amount);
@@ -23,8 +23,6 @@ function ModalMenu({ menu, isOpen = true, onClose, className = "" }) {
   }
 
   const menuItems = menu.items ?? [];
-  const token = localStorage.getItem("accessToken");
-
   const handleQuantityChange = (itemId, amount) => {
     const nextQuantity = Math.max(1, (quantities[itemId] ?? 1) + amount);
 
@@ -46,23 +44,13 @@ function ModalMenu({ menu, isOpen = true, onClose, className = "" }) {
     const quantity = quantities[item.id] ?? 1;
 
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/carts/items`,
-        {
-          items: [
-            {
-              menu_id: item.id,
-              quantity: quantity,
-              menu_option_id: selectedOption?.id ?? null,
-            },
-          ],
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await addCartItem({
+        menuId: item.id,
+        quantity,
+        menuOptionIds: selectedOption ? [selectedOption.id] : [],
+      });
       alert("장바구니에 담았습니다.");
-      onClose();
+      onClose?.();
     } catch (error) {
       console.error(error);
     }
@@ -90,7 +78,7 @@ function ModalMenu({ menu, isOpen = true, onClose, className = "" }) {
 
       <ul className="mt-8 flex w-full flex-col gap-14 ph:mt-0">
         {menuItems.map((item) => {
-          const menuOptions = item.menu_options ?? [];
+          const menuOptions = item.menuOptions ?? item.menu_options ?? [];
           const quantity = quantities[item.id] ?? 1;
 
           return (

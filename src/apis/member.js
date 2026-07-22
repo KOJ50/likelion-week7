@@ -24,3 +24,14 @@ export const logout = async () => {
 
   return data;
 };
+
+export const getMyInfo = async (config = {}) => {
+  const { data } = await axiosInstance.get("/members/me", config);
+  const member = data.result ?? data;
+
+  return {
+    ...member,
+    memberId: member.memberId ?? member.member_id,
+    loginId: member.loginId ?? member.login_id,
+  };
+};

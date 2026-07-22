@@ -31,6 +31,8 @@ const axiosInstance = axios.create({
   },
 });
 
+let isRedirectingToLogin = false;
+
 axiosInstance.interceptors.request.use((config) => {
   const accessToken = getAccessToken();
 
@@ -40,5 +42,25 @@ axiosInstance.interceptors.request.use((config) => {
 
   return config;
 });
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      clearAccessToken();
+
+      if (
+        typeof window !== "undefined" &&
+        window.location.pathname !== "/login" &&
+        !isRedirectingToLogin
+      ) {
+        isRedirectingToLogin = true;
+        window.location.replace("/login");
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
 
 export default axiosInstance;

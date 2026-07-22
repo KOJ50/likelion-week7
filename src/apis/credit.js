@@ -5,8 +5,12 @@ export const getCredit = async (config = {}) => {
     "/api/v1/members/me/credit",
     config,
   );
+  const credit = data.result ?? data;
 
-  return data;
+  return {
+    ...credit,
+    memberId: credit.memberId ?? credit.member_id,
+  };
 };
 
 export const chargeCredit = async ({ amount }, config = {}) => {

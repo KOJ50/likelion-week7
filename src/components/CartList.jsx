@@ -3,7 +3,7 @@ import IconClose from "../assets/icons/icon_close.svg?react";
 import OptionTag from "./OptionTag";
 
 const CartList = ({
-  restaurantName,
+  restaurantName = "장바구니 메뉴",
   items,
   onIncrease,
   onDecrease,
@@ -18,25 +18,35 @@ const CartList = ({
       <div className="flex flex-col">
         {items.map((item, index) => (
           <div
-            key={item.id}
+            key={item.cartItemId}
             className={`flex flex-col ph:flex-row ph:items-center ph:justify-between px-5 py-3 ${
               index !== 0 ? "border-t border-gray-2" : ""
             }`}
           >
             <div className="flex flex-col gap-2">
-              <div className="text-subtitle">{item.menu.name}</div>
+              <div className="text-subtitle">{item.menuName}</div>
 
-              {item.menu_option && (
+              {item.options?.length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  <OptionTag
-                    text={item.menu_option.option}
-                    variant="menu"
-                    isSelected={false}
-                  />
+                  {item.options.map((option) => (
+                    <OptionTag
+                      key={option.cartItemOptionId ?? option.menuOptionId}
+                      text={option.content ?? option.option}
+                      variant="menu"
+                      isSelected={false}
+                    />
+                  ))}
                 </div>
               )}
               <div className="text-subtitle text-black-primary">
-                {item.menu.price.toLocaleString()}원
+                {(
+                  item.menuPrice +
+                  (item.options?.reduce(
+                    (sum, option) => sum + (option.price ?? 0),
+                    0,
+                  ) ?? 0)
+                ).toLocaleString("ko-KR")}
+                원
               </div>
             </div>
 

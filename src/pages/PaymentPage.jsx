@@ -1,36 +1,79 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CartList from "../components/CartList.jsx";
 import ModalPay from "../components/ModalPay.jsx";
 import pointerIcon from "../assets/icons/icon_pointer.png";
 import cardIcon from "../assets/icons/icon_card.svg";
 import cartIcon from "../assets/icons/icon_cart.svg";
-import axios from "axios";
 import { getCredit } from "../apis/credit.js";
 import { clearAccessToken, getAccessToken } from "../apis/axiosInstance.js";
+import {
+  clearCartItems,
+  deleteCartItem,
+  getCart,
+  updateCartItem,
+} from "../apis/cart.js";
+import { getMenuDetail } from "../apis/menu.js";
+import { getMyInfo } from "../apis/member.js";
+import { createOrder } from "../apis/order.js";
+import { getStores } from "../apis/store.js";
 
 function PaymentPage() {
   const navigate = useNavigate();
   const [showPay, setShowPay] = useState(false);
   const [ownedCredit, setOwnedCredit] = useState(null);
   const [creditError, setCreditError] = useState("");
+  const [memberId, setMemberId] = useState(null);
+  const [cart, setCart] = useState({ items: [] });
+  const [paymentError, setPaymentError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [cart, setCart] = useState([]);
-  const token = localStorage.getItem("accessToken");
+  const fetchCart = useCallback(
+    async (config = {}) => {
+      try {
+        const [cartData, stores] = await Promise.all([
+          getCart(config),
+          getStores(config),
+        ]);
+        const storeNames = new Map(
+          stores.map((store) => [
+            Number(store.id ?? store.store_id),
+            store.name ?? store.store_name,
+          ]),
+        );
+        const items = await Promise.all(
+          (cartData.items ?? []).map(async (item) => {
+            const menu = await getMenuDetail(item.menuId, config);
+            const storeId = item.storeId ?? menu.storeId ?? menu.store_id;
 
-  async function fetchCart() {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/cart`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-      setCart(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+            return {
+              ...item,
+              menuName: item.menuName ?? menu.name,
+              menuPrice: menu.price ?? 0,
+              storeId,
+              storeName:
+                storeNames.get(Number(storeId)) ?? cartData.store?.name,
+            };
+          }),
+        );
+
+        setCart({ ...cartData, items });
+      } catch (error) {
+        if (error.code === "ERR_CANCELED") {
+          return;
+        }
+
+        if (error.response?.status === 401) {
+          clearAccessToken();
+          navigate("/login", { replace: true });
+          return;
+        }
+
+        console.error("장바구니 정보를 불러오지 못했습니다.", error);
+      }
+    },
+    [navigate],
+  );
 
   useEffect(() => {
     if (!getAccessToken()) {
@@ -44,6 +87,10 @@ function PaymentPage() {
       try {
         const data = await getCredit({ signal: controller.signal });
         setOwnedCredit(data.credit);
+        if (data.memberId != null) {
+          setMemberId(data.memberId);
+          setPaymentError("");
+        }
       } catch (error) {
         if (error.code === "ERR_CANCELED") {
           return;
@@ -62,61 +109,67 @@ function PaymentPage() {
     };
 
     fetchCredit();
+    getMyInfo({ signal: controller.signal })
+      .then((data) => {
+        if (data.memberId == null) {
+          throw new Error("회원 ID가 응답에 포함되지 않았습니다.");
+        }
+
+        setMemberId(data.memberId);
+        setPaymentError("");
+      })
+      .catch((error) => {
+        if (error.code === "ERR_CANCELED") {
+          return;
+        }
+
+        if (error.response?.status === 401) {
+          clearAccessToken();
+          navigate("/login", { replace: true });
+          return;
+        }
+
+        setPaymentError(
+          error.response?.data?.message ?? "회원 정보를 불러오지 못했습니다.",
+        );
+      });
+    Promise.resolve().then(() => fetchCart({ signal: controller.signal }));
 
     return () => controller.abort();
-  }, [navigate]);
+  }, [fetchCart, navigate]);
 
   const increaseQuantity = async (item) => {
     try {
-      await axios.patch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/carts/items/${item.id}`,
-        {
-          quantity: item.quantity + 1,
-          menu_option_id: item.menu_option.id,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      await updateCartItem(item.cartItemId, {
+        quantity: item.quantity + 1,
+        menuOptionIds: item.options?.map((option) => option.menuOptionId) ?? [],
+      });
       fetchCart();
     } catch (error) {
-      console.error(error);
+      alert(error.response?.data?.message ?? "수량을 변경하지 못했습니다.");
     }
   };
 
   const decreaseQuantity = async (item) => {
     if (item.quantity <= 1) return;
     try {
-      await axios.patch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/carts/items/${item.id}`,
-        {
-          quantity: item.quantity - 1,
-          menu_option_id: item.menu_option.id,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      await updateCartItem(item.cartItemId, {
+        quantity: item.quantity - 1,
+        menuOptionIds: item.options?.map((option) => option.menuOptionId) ?? [],
+      });
 
       fetchCart();
     } catch (error) {
-      console.error(error);
+      alert(error.response?.data?.message ?? "수량을 변경하지 못했습니다.");
     }
   };
 
   const removeItem = async (item) => {
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/carts/items/${item.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      await deleteCartItem(item.cartItemId);
       fetchCart();
     } catch (error) {
-      console.error(error);
+      alert(error.response?.data?.message ?? "상품을 삭제하지 못했습니다.");
     }
   };
 
@@ -124,17 +177,75 @@ function PaymentPage() {
     cart?.items?.reduce(
       (sum, item) =>
         sum +
-        (item.menu.price + (item.menu_option?.price ?? 0)) * item.quantity,
+        (item.menuPrice +
+          (item.options?.reduce(
+            (optionSum, option) => optionSum + (option.price ?? 0),
+            0,
+          ) ?? 0)) *
+          item.quantity,
       0,
     ) ?? 0;
 
-  const handlePaymentSubmit = () => {
+  const cartGroups = Array.from(
+    cart.items.reduce((groups, item) => {
+      const groupKey = item.storeId ?? item.storeName ?? "unknown";
+      const currentGroup = groups.get(groupKey) ?? {
+        storeId: item.storeId,
+        storeName: item.storeName ?? "가게 정보 없음",
+        items: [],
+      };
+
+      currentGroup.items.push(item);
+      groups.set(groupKey, currentGroup);
+      return groups;
+    }, new Map()),
+  ).map(([, group]) => group);
+
+  const handlePaymentSubmit = async () => {
+    if (!cart.items.length || isSubmitting) {
+      return;
+    }
+
     if (ownedCredit - totalAmount < 0) {
       navigate("/recharge");
       return;
     }
 
-    navigate("/complete");
+    if (memberId == null) {
+      setPaymentError("회원 정보를 확인할 수 없습니다. 다시 시도해주세요.");
+      return;
+    }
+
+    const cartItemIds = cart.items.map((item) => item.cartItemId);
+
+    setIsSubmitting(true);
+    setPaymentError("");
+
+    try {
+      await createOrder({
+        memberId,
+        cartItemIds,
+      });
+    } catch (error) {
+      setPaymentError(
+        error.response?.data?.message ??
+          "주문을 처리하지 못했습니다. 잠시 후 다시 시도해주세요.",
+      );
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      await clearCartItems(cartItemIds);
+      setCart((currentCart) => ({ ...currentCart, items: [] }));
+    } catch (error) {
+      console.error("주문 후 장바구니 초기화에 실패했습니다.", error);
+      alert(
+        "주문은 완료되었지만 장바구니를 초기화하지 못했습니다. 페이지를 새로고침해주세요.",
+      );
+    } finally {
+      navigate("/complete");
+    }
   };
 
   const renderPaymentModal = () => {
@@ -151,12 +262,19 @@ function PaymentPage() {
     }
 
     return (
-      <ModalPay
-        totalAmount={totalAmount}
-        ownedCredit={ownedCredit}
-        onSubmit={handlePaymentSubmit}
-        onRechargeCredit={() => navigate("/recharge")}
-      />
+      <div className="flex w-full flex-col gap-3">
+        {paymentError && (
+          <p className="text-body text-red-primary">{paymentError}</p>
+        )}
+        <ModalPay
+          totalAmount={totalAmount}
+          ownedCredit={ownedCredit}
+          onSubmit={handlePaymentSubmit}
+          onRechargeCredit={() => navigate("/recharge")}
+          isSubmitting={isSubmitting}
+          disabled={!cart.items.length}
+        />
+      </div>
     );
   };
 
@@ -201,13 +319,18 @@ function PaymentPage() {
         {!showPay ? (
           <main className="w-full flex flex-col items-center px-5 mt-[110px] gap-6">
             {cart?.items?.length > 0 ? (
-              <CartList
-                restaurantName={cart.store.name}
-                items={cart.items}
-                onIncrease={increaseQuantity}
-                onDecrease={decreaseQuantity}
-                onRemove={removeItem}
-              />
+              <div className="flex flex-col gap-6">
+                {cartGroups.map((group) => (
+                  <CartList
+                    key={group.storeId ?? group.storeName}
+                    restaurantName={group.storeName}
+                    items={group.items}
+                    onIncrease={increaseQuantity}
+                    onDecrease={decreaseQuantity}
+                    onRemove={removeItem}
+                  />
+                ))}
+              </div>
             ) : (
               <div className="h-[200px] bg-gray-0 rounded-modal flex items-center justify-center text-body text-gray-4">
                 장바구니에 담긴 메뉴가 없습니다.
@@ -225,13 +348,16 @@ function PaymentPage() {
       <main className="hidden ph:flex w-full max-w-[1200px] justify-between mt-[104px] px-5 mx-auto gap-6">
         <section className="flex flex-col gap-6">
           {cart?.items?.length > 0 ? (
-            <CartList
-              restaurantName={cart.store.name}
-              items={cart.items}
-              onIncrease={increaseQuantity}
-              onDecrease={decreaseQuantity}
-              onRemove={removeItem}
-            />
+            cartGroups.map((group) => (
+              <CartList
+                key={group.storeId ?? group.storeName}
+                restaurantName={group.storeName}
+                items={group.items}
+                onIncrease={increaseQuantity}
+                onDecrease={decreaseQuantity}
+                onRemove={removeItem}
+              />
+            ))
           ) : (
             <div className="w-[561px] h-[200px] bg-gray-0 rounded-modal flex items-center justify-center text-body text-gray-4">
               장바구니에 담긴 메뉴가 없습니다.

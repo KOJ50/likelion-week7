@@ -1,14 +1,47 @@
 import { useNavigate } from "react-router-dom";
 import Cart from "./Cart.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { logout } from "../apis/member";
 import { clearAccessToken, getAccessToken } from "../apis/axiosInstance";
 import CurrentCredit from "./CurrentCredit.jsx";
+import { CART_UPDATED_EVENT, getCart } from "../apis/cart";
 
 const NavBar = ({ title }) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(() => Boolean(getAccessToken()));
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      return undefined;
+    }
+
+    const controller = new AbortController();
+    const fetchCartCount = async () => {
+      try {
+        const cart = await getCart({ signal: controller.signal });
+        setCartCount(
+          (cart.items ?? []).reduce(
+            (count, item) => count + (item.quantity ?? 0),
+            0,
+          ),
+        );
+      } catch (error) {
+        if (error.code !== "ERR_CANCELED") {
+          setCartCount(0);
+        }
+      }
+    };
+
+    fetchCartCount();
+    window.addEventListener(CART_UPDATED_EVENT, fetchCartCount);
+
+    return () => {
+      controller.abort();
+      window.removeEventListener(CART_UPDATED_EVENT, fetchCartCount);
+    };
+  }, [isLoggedIn]);
 
   const handleAuthClick = async () => {
     if (!isLoggedIn) {
@@ -27,6 +60,7 @@ const NavBar = ({ title }) => {
     } finally {
       clearAccessToken();
       setIsLoggedIn(false);
+      setCartCount(0);
       navigate("/login");
     }
   };
@@ -44,7 +78,7 @@ const NavBar = ({ title }) => {
         {/* 데스크탑 메뉴 */}
         <div className="hidden ph:flex items-center ph:gap-6 text-white min-w-max">
           <CurrentCredit onClick={() => navigate("/recharge")} />
-          <Cart count={1} onClick={() => navigate("/payment")} />
+          <Cart count={cartCount} onClick={() => navigate("/payment")} />
           <button
             onClick={handleAuthClick}
             className="text-xs ph:text-sm hover:bg-white/30 rounded-small cursor-pointer px-2 ph:px-3 py-1.5 whitespace-nowrap"
